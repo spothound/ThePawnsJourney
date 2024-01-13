@@ -12,7 +12,7 @@ import { useTitle } from '@vueuse/core'
 const route = useRoute()
 const title = computed(() => {
   const title = route.meta?.title || route.matched[0].meta?.title || ''
-  return title ? `${title} | Vitify Admin` : 'Vitify Admin'
+  return title ? `${title} | The Pawn´s Journey` : 'The Pawn´s Journey'
 })
 useTitle(title)
 </script>

@@ -35,10 +35,9 @@ nextTick(() => {
             />
           </template>
           <v-list-item-title
-            class="text-h5 font-weight-bold"
+            class="text-h6 font-weight-bold"
             style="line-height: 2rem"
-          >
-            Vitify <span class="text-primary">Admin</span>
+          > Pawn's<span class="text-primary">Journey</span>
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -53,19 +52,12 @@ nextTick(() => {
           class="text-caption pt-6 pb-1 pt-md-0 text-center"
           style="white-space: nowrap"
         >
-          &copy; Copyright 2023
+          &copy; Copyright 2024
           <a
-            href="https://github.com/kingyue737"
+            href="https://github.com/spothound/"
             class="font-weight-bold text-primary"
             target="_blank"
-            >Yue JIN</a
-          >
-          <span> & </span>
-          <a
-            href="https://www.nustarnuclear.com/"
-            class="font-weight-bold text-primary"
-            target="_blank"
-            >NuStar</a
+            >Francisco Navarro</a
           >
         </div>
       </v-list-item>

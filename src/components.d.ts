@@ -18,7 +18,11 @@ declare module 'vue' {
     ChartLine: typeof import('./components/demo-charts/ChartLine.vue')['default']
     ChartPie: typeof import('./components/demo-charts/ChartPie.vue')['default']
     ChartRadar: typeof import('./components/demo-charts/ChartRadar.vue')['default']
+    ChessPuzzle: typeof import('./components/ChessPuzzle.vue')['default']
+    RankingView: typeof import('./components/RankingView.vue')['default']
     RouterWrapper: typeof import('./components/layout/RouterWrapper.vue')['default']
     StatsCard: typeof import('./components/StatsCard.vue')['default']
+    StopWatch: typeof import('./components/StopWatch.vue')['default']
+    TrainingSession: typeof import('./components/TrainingSession.vue')['default']
   }
 }
