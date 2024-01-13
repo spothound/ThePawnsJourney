@@ -1,7 +1,7 @@
 # The Pawn's Journey
 
 <p align="center">
-  <img alt="The Pawn's Journey" src="public/favicon.svg" width=200px/>
+  <img alt="The Pawn's Journey" src="src/assets/logo.png" width=200px/>
 </p>
 
 <p align="center">
