@@ -14,11 +14,27 @@ const props = defineProps({
   }
 })
 
-const lastPuzzle = JSON.parse(localStorage.getItem(`lastPuzzle_${props.level}`) || '0')
-const puzzleRankings = JSON.parse(localStorage.getItem(`puzzleRankings_${props.level}`) || '[]')
-const currentPuzzle = ref(lastPuzzle)
+const maxIndex = props.puzzleColection.length - 1
+const puzzleRankings = new Array(maxIndex).fill(-1);
 const solved = ref(false)
 const requiredTime = ref(0)
+const currentPuzzle = ref()
+
+function nextPuzzle () {
+  solved.value = false
+  // get an array of indices where puzzleRankings equals -1
+  const unplayedPuzzles = puzzleRankings
+    .map((ranking, index) => ranking === -1 ? index : -1)
+    .filter(index => index !== -1);
+  // if there are no unplayed puzzles, do nothing
+  if (unplayedPuzzles.length === 0)  Math.floor(Math.random() * puzzleRankings.length);
+  // get a random index from unplayedPuzzles
+  const randomIndex = Math.floor(Math.random() * unplayedPuzzles.length);
+  currentPuzzle.value = unplayedPuzzles[randomIndex];
+  console.log(currentPuzzle.value)
+}
+
+nextPuzzle()
 
 function calculateRank(timeElapsed: number, moves: number, failures: number)
 {
@@ -42,19 +58,8 @@ function calculateRank(timeElapsed: number, moves: number, failures: number)
 function puzzleSolved (timeElapsed: number, moves: number, failures: number) {
   solved.value = true
   requiredTime.value = timeElapsed
-  if(puzzleRankings.length < currentPuzzle.value + 1) {
-    puzzleRankings.push(calculateRank(timeElapsed, moves, failures))
-  }
-  else {
-    puzzleRankings[currentPuzzle.value] = calculateRank(timeElapsed, moves, failures)
-  }
+  puzzleRankings[currentPuzzle.value] = calculateRank(timeElapsed, moves, failures)
   localStorage.setItem(`puzzleRankings_${props.level}`, JSON.stringify(puzzleRankings))
-}
-
-function nextPuzzle () {
-  solved.value = false
-  currentPuzzle.value++
-  localStorage.setItem(`lastPuzzle_${props.level}`, JSON.stringify(currentPuzzle.value))
 }
 </script>
 
