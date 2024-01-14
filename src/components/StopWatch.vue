@@ -45,6 +45,6 @@ const formattedTime = computed(() => {
 .stopwatch {
   font-family: 'Share Tech Mono', monospace;
   font-size: 2em;
-  color: #dcf7ff;
+  color:"primary"
 }
 </style>
