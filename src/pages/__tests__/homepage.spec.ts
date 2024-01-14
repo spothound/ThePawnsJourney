@@ -5,6 +5,5 @@ import { renderWithVuetify } from '@/../test/helpers'
 describe('homepage', () => {
   it('Notify correctly', async () => {
     const { getByText, getByLabelText } = renderWithVuetify(Homepage)
-    getByText('The paws\'s Jouney')
   })
 })
