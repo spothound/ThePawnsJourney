@@ -110,15 +110,23 @@ function goBack () {
 
 <template>
   <v-container class="full-size center-text">
-    <StopWatch ref="stopwatchRef"/>
-    <TheChessboard class="full-size test" @move="handleMove" @board-created="(api: any) => (boardAPI = api)" :player-color="playerColor"
-      :board-config="boardConfig" reactive-config />
+    <v-row justify="center">
+      <v-col cols="12">
+        <StopWatch ref="stopwatchRef"/>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col cols="12">
+        <TheChessboard class="full-size test" @move="handleMove" @board-created="(api: any) => (boardAPI = api)" :player-color="playerColor"
+          :board-config="boardConfig" reactive-config />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <style scoped>
 .full-size {
-  width: 70vh;
+  width: 100%;
 }
 .center-text {
   text-align: center;

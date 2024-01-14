@@ -60,10 +60,26 @@ function nextPuzzle () {
 
 <template>
   <v-container class="full-size center-text">
-    <ChessPuzzle @solved="puzzleSolved" :key="puzzleColection[currentPuzzle].PuzzleId" :puzzle-data="puzzleColection[currentPuzzle]" />
+    <v-row justify="center">
+      <v-col cols="12">
+        <ChessPuzzle @solved="puzzleSolved" :key="puzzleColection[currentPuzzle].PuzzleId" :puzzle-data="puzzleColection[currentPuzzle]" />
+      </v-col>
+    </v-row>
     <v-row v-show="solved" justify="center">
-      <v-btn variant="outlined" @click="nextPuzzle()">Continue</v-btn>
+      <v-col cols="12" class="text-center">
+        <v-btn variant="outlined" class="mx-auto" @click="nextPuzzle()">Continue</v-btn>
+      </v-col>
     </v-row>
   </v-container>
-
 </template>
+
+<style scoped>
+.full-size {
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+}
+.center-text {
+  text-align: center;
+}
+</style>

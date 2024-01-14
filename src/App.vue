@@ -8,7 +8,14 @@ provide(
 </script>
 
 <template>
-  <v-app>
+  <v-app class="full-size">
     <router-view />
   </v-app>
 </template>
+
+<style scoped>
+.full-size {
+  height: 100vh;
+  overflow: hidden;
+}
+</style>
