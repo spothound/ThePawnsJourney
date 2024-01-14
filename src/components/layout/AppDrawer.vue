@@ -60,6 +60,21 @@ nextTick(() => {
             >Francisco Navarro</a
           >
         </div>
+        <div
+          class="text-caption pt-6 pb-1 pt-md-0 text-center"
+          style="white-space: nowrap"
+        >
+          <a
+            href="https://github.com/spothound/ThePawnsJourney"
+            target="_blank">
+            <v-icon
+              icon="mdi-github"
+              size="x-large"
+              class="drawer-footer-icon"
+              color="primary"
+            /> GitHub Repository
+          </a>
+        </div>
       </v-list-item>
     </template>
   </v-navigation-drawer>

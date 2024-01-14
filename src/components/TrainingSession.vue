@@ -67,7 +67,7 @@ function puzzleSolved (timeElapsed: number, moves: number, failures: number) {
   <v-container class="full-size center-text">
     <v-row justify="center">
       <v-col cols="12">
-        <ChessPuzzle @solved="puzzleSolved" :key="puzzleColection[currentPuzzle].PuzzleId" :puzzle-data="puzzleColection[currentPuzzle]" />
+        <ChessPuzzle @solved="puzzleSolved" :key="(puzzleColection[currentPuzzle] as any).PuzzleId" :puzzle-data="(puzzleColection[currentPuzzle] as any)"/>
       </v-col>
     </v-row>
     <v-row v-show="solved" justify="center">
