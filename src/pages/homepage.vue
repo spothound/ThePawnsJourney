@@ -29,9 +29,10 @@ const levels = ['500_1000', '1000_1500', '1500_2000', '2000_2500', '2500_3000', 
   <v-row class="text-center">
     <v-col cols="12">
       <p>This app is designed to help you train easy chess tactics in your browser. It uses <strong>puzzless from Lichess public database</strong>.</p>
-      <p>You can pick a level (elo range) and the app will let you play infinite puzzless for that level.</p>
-      <p>So far, all the logic/code of the app runs in your browser (not in a server, not with a database), this means it won't store any data about your results (except locally in your browser storage to know which ones you have solved) and every time you pick a new level the puzzless will be randomized and the progress reset.</p>
-      <p>If you like this project and want to support it consider <a href="https://github.com/spothound/ThePawnsJourney" target="_blank">visiting the project in GitHub</a> and opening an issue/ticket or writting to me at navarromoralesdev@gmail.com</p>
+      <p>You can pick a level (elo range) and the app will let you play different puzzless for that level.</p>
+      <p>So far, all the logic/code of the app runs in your browser (not in a server, not with a database), this means it won't store any data about your results (except locally in your browser storage data to know which ones you have solved). If you play in different devices you may get some puzzles that you have already played but since the purpose of this is practice, who cares.</p>
+      <p>If you like this project and want to support it consider <a href="https://github.com/spothound/ThePawnsJourney" target="_blank">visiting the project in GitHub</a> and opening an issue/ticket, propose changes, etc; or writting to me at navarromoralesdev@gmail.com</p>
+      <v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank"><v-icon left>mdi-coffee</v-icon>Buy me a coffe if you find this website useful for your practice and want to thank me!</v-btn>
     </v-col>
   </v-row>
   <v-row class="text-center">
