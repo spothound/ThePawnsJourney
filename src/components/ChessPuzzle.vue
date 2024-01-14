@@ -126,7 +126,8 @@ function goBack () {
 
 <style scoped>
 .full-size {
-  width: 75vh;
+  width: 100%;
+  max-width: 80vh;
 }
 .center-text {
   text-align: center;
