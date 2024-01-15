@@ -33,7 +33,8 @@ const boardConfig: BoardConfig = reactive({
   coordinates: true,
   viewOnly: false,
   animation: { enabled: true },
-  draggable: { enabled: true }
+  draggable: { enabled: true },
+  orientation: playerColor,
 })
 
 // Functions
