@@ -103,6 +103,7 @@ onMounted(() => {
 })
 
 function goBack () {
+  moves--
   boardAPI?.undoLastMove()
   invalidMove.value = false
 }
