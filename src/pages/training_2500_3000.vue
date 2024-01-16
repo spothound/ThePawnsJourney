@@ -4,7 +4,7 @@ import data from '../puzzles/ratings_2500_3000.json'
 definePage({
   meta: {
     title: 'Training 2500-3000',
-    icon: 'mdi-pencil',
+    icon: 'mdi-numeric-6',
     drawerIndex: 5,
   },
 })
@@ -12,7 +12,7 @@ definePage({
 
 <template>
   <div class="wrapper full-size">
-    <TrainingSession :puzzle-colection="data" :level="0"/>
+    <TrainingSession :puzzle-colection="data" :level="5"/>
   </div>
 </template>
 

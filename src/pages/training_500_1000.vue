@@ -3,7 +3,7 @@ import router from '@/plugins/router';
 import data from '../puzzles/ratings_500_1000.json'
 definePage({
   meta: {
-    icon: 'mdi-pencil',
+    icon: 'mdi-numeric-2',
     title: 'Training 500-1000',
     drawerIndex: 1,
   },
@@ -12,7 +12,7 @@ definePage({
 
 <template>
   <div class="wrapper full-size">
-    <TrainingSession :puzzle-colection="data" :level="0"/>
+    <TrainingSession :puzzle-colection="data" :level="1"/>
   </div>
 </template>
 
