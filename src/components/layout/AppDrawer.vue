@@ -17,7 +17,7 @@ const rail = computed(() => !drawerStored.value && !mobile.value)
 routes.sort((a, b) => (a.meta?.drawerIndex ?? 99) - (b.meta?.drawerIndex ?? 98))
 
 nextTick(() => {
-  drawerStored.value = lgAndUp.value && width.value !== 1280
+  drawerStored.value = false
 })
 </script>
 
