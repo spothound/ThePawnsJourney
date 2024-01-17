@@ -9,7 +9,7 @@ import errorSound from '../assets/sounds/error-sound.mp3'
 import moveSound from '../assets/sounds/move-sound.mp3'
 
 // Parent-child communication
-const emit = defineEmits(['solved'])
+const emit = defineEmits(['solved', 'failure'])
 const props = defineProps({
   puzzleData: {
     type: Object,
@@ -82,6 +82,7 @@ function handlePlayerMove (move: MoveEvent) {
   } else {
     invalidMove.value = true
     new Audio(errorSound).play()
+    emit('failure')
   }
 }
 
@@ -122,6 +123,7 @@ nextTick(() => {
 })
 
 onMounted(async () => {
+  window.addEventListener('resize', resizeBoard);
   resizeBoard()
   runEnemyMove()
   playerColor = boardAPI?.getLastMove()?.color === 'w' ? 'black' : 'white'
