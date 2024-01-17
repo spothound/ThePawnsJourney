@@ -22,7 +22,7 @@ const props = defineProps({
 
 let boardAPI: BoardApi | undefined
 const invalidMove = ref(false)
-const stopwatchRef = ref({ stop: () => {return(0)} });
+
 const intervalId = setInterval(DetectFailure, 1500);
 let playerColor: MoveableColor = props.puzzleData.FEN.split(' ')[1] === 'b' ? 'white' : 'black'
 let pendingMoves = props.puzzleData.Moves.split(' ')
@@ -40,8 +40,7 @@ const boardConfig: BoardConfig = reactive({
 // Functions
 
 function solvedPuzzle () {
-  const timeElapsed = stopwatchRef.value ? stopwatchRef.value.stop() : 0;
-  emit('solved', timeElapsed, moves, failures);
+  emit('solved', moves, failures);
   new Audio(confirmationSound).play()
 }
 

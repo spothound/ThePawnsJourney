@@ -19,9 +19,13 @@ const puzzleRankings = new Array(maxIndex).fill(-1);
 const solved = ref(false)
 const requiredTime = ref(0)
 const currentPuzzle = ref()
-
+const stopwatchRef = ref({
+  stop: () => { return(0) },
+  restart: () => { return(0)}
+});
 function nextPuzzle () {
   solved.value = false
+  stopwatchRef.value.restart()
   // get an array of indices where puzzleRankings equals -1
   const unplayedPuzzles = puzzleRankings
     .map((ranking, index) => ranking === -1 ? index : -1)
@@ -54,8 +58,9 @@ function calculateRank(timeElapsed: number, moves: number, failures: number)
   return rank
 }
 
-function puzzleSolved (timeElapsed: number, moves: number, failures: number) {
+function puzzleSolved ( moves: number, failures: number) {
   solved.value = true
+  const timeElapsed = stopwatchRef.value ? stopwatchRef.value.stop() : 0;
   requiredTime.value = timeElapsed
   puzzleRankings[currentPuzzle.value] = calculateRank(timeElapsed, moves, failures)
   localStorage.setItem(`puzzleRankings_${props.level}`, JSON.stringify(puzzleRankings))
@@ -71,18 +76,18 @@ onMounted(() => {
   <v-container class="training">
     <v-row no-gutters class="training" justify="center">
       <v-col sm="3" cols="12" class="text-center">
-        hola info about the puzzle
+        hola info about the session
       </v-col>
       <v-col sm="6" cols="12" class="board">
         <ChessPuzzle @solved="puzzleSolved" :key="(puzzleColection[currentPuzzle] as any).PuzzleId" :puzzle-data="(puzzleColection[currentPuzzle] as any)"/>
       </v-col>
       <v-col sm="3" cols="12" class="text-center">
-        <v-row>
-          <v-col cols="12">
+        <v-row no-gutters class="training" justify="center">
+          <v-col cols="12" class="board">
             <StopWatch ref="stopwatchRef"/>
           </v-col>
-          <v-col cols="12">
-            <v-btn v-show="solved||!solved" variant="outlined" class="mx-auto" @click="nextPuzzle()">Continue</v-btn>
+          <v-col cols="12" class="board">
+            <v-btn :disabled="!solved" variant="outlined" class="mx-auto" @click="nextPuzzle()">NEXT</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -92,17 +97,16 @@ onMounted(() => {
 
 <style scoped>
 .board{
-  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 .training {
   padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color:blue;
 }
 .text-center {
   text-align: center;
-  background-color:red
 }
 </style>

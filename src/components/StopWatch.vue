@@ -18,7 +18,13 @@ const stop = () => {
   return timeElapsed.value;
 };
 
-defineExpose({ stop });
+const restart = () => {
+  startTime.value = Date.now();
+  timer = setInterval(updateTime, 1);
+};
+
+
+defineExpose({ stop, restart });
 
 onMounted(() => {
   timer = setInterval(updateTime, 1);
