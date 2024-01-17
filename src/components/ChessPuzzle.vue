@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import 'vue3-chessboard/style.css'
 // @ts-ignore
-import { TheChessboard, type BoardConfig, BoardApi, type MoveEvent, MoveableColor } from 'vue3-chessboard'
+import { TheChessboard, type BoardConfig, BoardApi, type MoveEvent, MoveableColor, type DrawShape } from 'vue3-chessboard'
 import { defineProps, reactive, onMounted, ref, defineEmits } from 'vue'
 import captureSound from '../assets/sounds/capture-sound.mp3'
 import confirmationSound from '../assets/sounds/confirmation-sound.mp3'
@@ -80,7 +80,6 @@ function handlePlayerMove (move: MoveEvent) {
     pendingMoves = pendingMoves.slice(1)
     runEnemyMove()
   } else {
-    console.log('Invalid move, the correct move is: ' + pendingMoves[0])
     invalidMove.value = true
     new Audio(errorSound).play()
     emit('failure')
@@ -111,10 +110,6 @@ function resizeBoard() {
       const mainWidth = main.clientWidth
       chessboard.style.width = `${Math.max(chessboardParentWidth, mainHeight)}px`;
       chessboard.style.maxWidth = `${Math.min(chessboardParentWidth, mainHeight, 900)}px`;
-
-      console.log("Parent: " + chessboardParentHeight + "x" + chessboardParentWidth + " " + parent.className)
-      console.log("Main: " + mainHeight + "x" + mainWidth + " " + main.className)
-      console.log("Chessboard: " + chessboard.clientHeight + "x" + chessboard.clientWidth + " " + chessboard.className)
     }
   }
 }
@@ -135,6 +130,21 @@ function goBack () {
   boardAPI?.undoLastMove()
   invalidMove.value = false
 }
+
+function clue () {
+  if (pendingMoves.length > 0) {
+    const nextMove = pendingMoves[0]
+        boardAPI?.setShapes([
+        {
+          orig: nextMove.slice(0, 2),
+          dest: nextMove.slice(2, 4),
+          brush: 'paleGreen'
+        },
+      ])
+    }
+}
+
+defineExpose({ clue });
 
 </script>
 

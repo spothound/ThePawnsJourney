@@ -16,10 +16,13 @@ const props = defineProps({
 
 const auto = ref(false)
 const totalErrors = ref(0)
+const currentErrors = ref(0)
+const allowClue = ref(false)
 const totalPuzzless = ref(0)
 const maxIndex = props.puzzleColection.length - 1
 const puzzleRankings = new Array(maxIndex).fill(-1);
 const solved = ref(false)
+const puzzleRef = ref()
 const requiredTime = ref(0)
 const currentPuzzle = ref()
 const puzzleClockRef = ref({
@@ -67,10 +70,14 @@ function calculateRank(timeElapsed: number, moves: number, failures: number)
 
 function handleFailure () {
   totalErrors.value++
+  currentErrors.value++
+  if (currentErrors.value > 2)
+    allowClue.value = true
 }
 
 function puzzleSolved ( moves: number, failures: number) {
   totalPuzzless.value++
+  currentErrors.value = 0
   solved.value = true
   const timeElapsed = puzzleClockRef.value ? puzzleClockRef.value.stop() : 0;
   requiredTime.value = timeElapsed
@@ -87,6 +94,10 @@ function restartSession(){
   localStorage.setItem(`puzzleRankings_${props.level}`, JSON.stringify(puzzleRankings))
   sessionClockRef.value.restart()
   nextPuzzle()
+}
+
+function sendClue(){
+  puzzleRef.value.clue()
 }
 
 </script>
@@ -109,7 +120,7 @@ function restartSession(){
         </v-row>
       </v-col>
       <v-col sm="6" cols="12" class="board">
-        <ChessPuzzle @failure="handleFailure" @solved="puzzleSolved" :key="(puzzleColection[currentPuzzle] as any).PuzzleId" :puzzle-data="(puzzleColection[currentPuzzle] as any)"/>
+        <ChessPuzzle ref="puzzleRef" @failure="handleFailure" @solved="puzzleSolved" :key="(puzzleColection[currentPuzzle] as any).PuzzleId" :puzzle-data="(puzzleColection[currentPuzzle] as any)"/>
       </v-col>
       <v-col sm="3" cols="12" class="text-center">
         <v-row no-gutters class="training" justify="center">
@@ -120,6 +131,7 @@ function restartSession(){
           <v-col cols="12" >
             <v-btn :disabled="!solved" variant="outlined" @click="nextPuzzle()">NEXT</v-btn>
             <v-switch inset class=switch v-model="auto" label="auto"></v-switch>
+            <v-btn :disabled="!allowClue" variant="outlined" @click="sendClue()">clue</v-btn>
           </v-col>
         </v-row>
       </v-col>
