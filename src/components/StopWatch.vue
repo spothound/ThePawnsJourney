@@ -18,7 +18,13 @@ const stop = () => {
   return timeElapsed.value;
 };
 
-defineExpose({ stop });
+const restart = () => {
+  startTime.value = Date.now();
+  timer = setInterval(updateTime, 1);
+};
+
+
+defineExpose({ stop, restart });
 
 onMounted(() => {
   timer = setInterval(updateTime, 1);
@@ -44,7 +50,7 @@ const formattedTime = computed(() => {
 
 .stopwatch {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 2em;
+  font-size: 1.5em;
   color:"primary"
 }
 </style>
