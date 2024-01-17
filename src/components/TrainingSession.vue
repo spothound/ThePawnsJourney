@@ -80,9 +80,14 @@ function puzzleSolved ( moves: number, failures: number) {
     nextPuzzle()
 }
 
-onMounted(() => {
-
-})
+function restartSession(){
+  totalErrors.value = 0
+  totalPuzzless.value = 0
+  puzzleRankings.fill(-1)
+  localStorage.setItem(`puzzleRankings_${props.level}`, JSON.stringify(puzzleRankings))
+  sessionClockRef.value.restart()
+  nextPuzzle()
+}
 
 </script>
 
@@ -94,12 +99,12 @@ onMounted(() => {
           <v-col cols="12">
             Session Time: <br/>
             <StopWatch ref="sessionClockRef"/>
+            <br/>
+            <v-btn variant="outlined" @click="restartSession()">Restart Session</v-btn>
           </v-col>
           <v-col cols="12">
-            N Puzzles: {{totalPuzzless}}
-          </v-col>
-          <v-col cols="12">
-            N Errors: {{totalErrors}}
+            Puzzles: {{totalPuzzless}}
+            Errors: {{totalErrors}}
           </v-col>
         </v-row>
       </v-col>

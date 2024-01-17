@@ -50,7 +50,7 @@ const formattedTime = computed(() => {
 
 .stopwatch {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 2em;
+  font-size: 1.5em;
   color:"primary"
 }
 </style>
