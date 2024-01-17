@@ -17,7 +17,7 @@ const rail = computed(() => !drawerStored.value && !mobile.value)
 routes.sort((a, b) => (a.meta?.drawerIndex ?? 99) - (b.meta?.drawerIndex ?? 98))
 
 nextTick(() => {
-  drawerStored.value = false
+  drawerStored.value = !mobile.value
 })
 </script>
 
@@ -45,38 +45,6 @@ nextTick(() => {
     <v-list nav density="compact">
       <AppDrawerItem v-for="route in routes" :key="route.name" :item="route" />
     </v-list>
-    <v-spacer />
-    <template #append>
-      <v-list-item class="drawer-footer px-0 d-flex flex-column justify-center">
-        <div
-          class="text-caption pt-6 pb-1 pt-md-0 text-center"
-          style="white-space: nowrap"
-        >
-          &copy; Copyright 2024
-          <a
-            href="https://github.com/spothound/"
-            class="font-weight-bold text-primary"
-            target="_blank"
-            >Francisco Navarro</a
-          >
-        </div>
-        <div
-          class="text-caption pt-6 pb-1 pt-md-0 text-center"
-          style="white-space: nowrap"
-        >
-          <a
-            href="https://github.com/spothound/ThePawnsJourney"
-            target="_blank">
-            <v-icon
-              icon="mdi-github"
-              size="x-large"
-              class="drawer-footer-icon"
-              color="primary"
-            /> GitHub Repository
-          </a>
-        </div>
-      </v-list-item>
-    </template>
   </v-navigation-drawer>
 </template>
 
