@@ -31,7 +31,6 @@ function nextPuzzle () {
   // get a random index from unplayedPuzzles
   const randomIndex = Math.floor(Math.random() * unplayedPuzzles.length);
   currentPuzzle.value = unplayedPuzzles[randomIndex];
-  console.log(currentPuzzle.value)
 }
 
 nextPuzzle()
@@ -61,30 +60,49 @@ function puzzleSolved (timeElapsed: number, moves: number, failures: number) {
   puzzleRankings[currentPuzzle.value] = calculateRank(timeElapsed, moves, failures)
   localStorage.setItem(`puzzleRankings_${props.level}`, JSON.stringify(puzzleRankings))
 }
+
+onMounted(() => {
+
+})
+
 </script>
 
 <template>
-  <v-container class="full-size center-text">
-    <v-row justify="center">
-      <v-col cols="12">
+  <v-container class="training">
+    <v-row no-gutters class="training" justify="center">
+      <v-col sm="3" cols="12" class="text-center">
+        hola info about the puzzle
+      </v-col>
+      <v-col sm="6" cols="12" class="board">
         <ChessPuzzle @solved="puzzleSolved" :key="(puzzleColection[currentPuzzle] as any).PuzzleId" :puzzle-data="(puzzleColection[currentPuzzle] as any)"/>
       </v-col>
-    </v-row>
-    <v-row v-show="solved" justify="center">
-      <v-col cols="12" class="text-center">
-        <v-btn variant="outlined" class="mx-auto" @click="nextPuzzle()">Continue</v-btn>
+      <v-col sm="3" cols="12" class="text-center">
+        <v-row>
+          <v-col cols="12">
+            <StopWatch ref="stopwatchRef"/>
+          </v-col>
+          <v-col cols="12">
+            <v-btn v-show="solved||!solved" variant="outlined" class="mx-auto" @click="nextPuzzle()">Continue</v-btn>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <style scoped>
-.full-size {
-  width: 100%;
-  max-height: 90vh;
-  overflow: hidden;
+.board{
+  height: 100%;
 }
-.center-text {
+.training {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color:blue;
+}
+.text-center {
   text-align: center;
+  background-color:red
 }
 </style>
