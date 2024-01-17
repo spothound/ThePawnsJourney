@@ -9,7 +9,7 @@ import errorSound from '../assets/sounds/error-sound.mp3'
 import moveSound from '../assets/sounds/move-sound.mp3'
 
 // Parent-child communication
-const emit = defineEmits(['solved'])
+const emit = defineEmits(['solved', 'failure'])
 const props = defineProps({
   puzzleData: {
     type: Object,
@@ -22,7 +22,7 @@ const props = defineProps({
 
 let boardAPI: BoardApi | undefined
 const invalidMove = ref(false)
-const stopwatchRef = ref({ stop: () => {return(0)} });
+
 const intervalId = setInterval(DetectFailure, 1500);
 let playerColor: MoveableColor = props.puzzleData.FEN.split(' ')[1] === 'b' ? 'white' : 'black'
 let pendingMoves = props.puzzleData.Moves.split(' ')
@@ -40,8 +40,7 @@ const boardConfig: BoardConfig = reactive({
 // Functions
 
 function solvedPuzzle () {
-  const timeElapsed = stopwatchRef.value ? stopwatchRef.value.stop() : 0;
-  emit('solved', timeElapsed, moves, failures);
+  emit('solved', moves, failures);
   new Audio(confirmationSound).play()
 }
 
@@ -84,6 +83,7 @@ function handlePlayerMove (move: MoveEvent) {
     console.log('Invalid move, the correct move is: ' + pendingMoves[0])
     invalidMove.value = true
     new Audio(errorSound).play()
+    emit('failure')
   }
 }
 
@@ -98,7 +98,34 @@ function handleMove (move: MoveEvent) {
   }
 }
 
-onMounted(() => {
+function resizeBoard() {
+  // this function find the element with class chessboard-visualization and resize it. It check if the element is present in the page and the width and height of its parent and set the width of the chessboard to the minimum between the two of them
+  const chessboard = document.getElementsByClassName('chessboard-visualization')[0] as HTMLElement
+  if (chessboard) {
+    const main = document.getElementsByClassName('v-main')[0] as HTMLElement
+    const parent = chessboard.parentElement
+    if (main && parent) {
+      const chessboardParentWidth = parent.clientWidth
+      const chessboardParentHeight = parent.clientHeight
+      const mainHeight = main.clientHeight
+      const mainWidth = main.clientWidth
+      chessboard.style.width = `${Math.max(chessboardParentWidth, mainHeight)}px`;
+      chessboard.style.maxWidth = `${Math.min(chessboardParentWidth, mainHeight, 900)}px`;
+
+      console.log("Parent: " + chessboardParentHeight + "x" + chessboardParentWidth + " " + parent.className)
+      console.log("Main: " + mainHeight + "x" + mainWidth + " " + main.className)
+      console.log("Chessboard: " + chessboard.clientHeight + "x" + chessboard.clientWidth + " " + chessboard.className)
+    }
+  }
+}
+
+nextTick(() => {
+  resizeBoard()
+})
+
+onMounted(async () => {
+  window.addEventListener('resize', resizeBoard);
+  resizeBoard()
   runEnemyMove()
   playerColor = boardAPI?.getLastMove()?.color === 'w' ? 'black' : 'white'
 })
@@ -112,27 +139,12 @@ function goBack () {
 </script>
 
 <template>
-  <v-container class="full-size center-text">
-    <v-row justify="center">
-      <v-col cols="12">
-        <StopWatch ref="stopwatchRef"/>
-      </v-col>
-    </v-row>
-    <v-row justify="center">
-      <v-col cols="12">
-        <TheChessboard class="full-size test" @move="handleMove" @board-created="(api: any) => (boardAPI = api)" :player-color="playerColor"
-          :board-config="boardConfig" reactive-config />
-      </v-col>
-    </v-row>
-  </v-container>
+  <TheChessboard class="chessboard-visualization" @move="handleMove" @board-created="(api: any) => (boardAPI = api)" :player-color="playerColor" :board-config="boardConfig" reactive-config />
 </template>
 
 <style scoped>
-.full-size {
-  width: 100%;
-  max-width: 80vh;
-}
-.center-text {
-  text-align: center;
+.chessboard-visualization {
+  margin: 0px;
+  width: 200px;
 }
 </style>
