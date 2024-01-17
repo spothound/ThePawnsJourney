@@ -81,6 +81,7 @@ function handlePlayerMove (move: MoveEvent) {
     pendingMoves = pendingMoves.slice(1)
     runEnemyMove()
   } else {
+    console.log('Invalid move, the correct move is: ' + pendingMoves[0])
     invalidMove.value = true
     new Audio(errorSound).play()
   }
@@ -103,6 +104,7 @@ onMounted(() => {
 })
 
 function goBack () {
+  moves--
   boardAPI?.undoLastMove()
   invalidMove.value = false
 }

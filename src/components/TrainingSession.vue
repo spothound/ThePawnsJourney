@@ -31,7 +31,6 @@ function nextPuzzle () {
   // get a random index from unplayedPuzzles
   const randomIndex = Math.floor(Math.random() * unplayedPuzzles.length);
   currentPuzzle.value = unplayedPuzzles[randomIndex];
-  console.log(currentPuzzle.value)
 }
 
 nextPuzzle()
