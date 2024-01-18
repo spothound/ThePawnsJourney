@@ -18,6 +18,8 @@ const auto = ref(false)
 const totalErrors = ref(0)
 const currentErrors = ref(0)
 const allowClue = ref(false)
+const errorOccurred = ref(false)
+const successOccurred = ref(false)
 const totalPuzzless = ref(0)
 const maxIndex = props.puzzleColection.length - 1
 const puzzleRankings = new Array(maxIndex).fill(-1);
@@ -35,6 +37,8 @@ const sessionClockRef = ref({
 });
 function nextPuzzle () {
   solved.value = false
+  allowClue.value = false
+  currentErrors.value = 0
   puzzleClockRef.value.restart()
   // get an array of indices where puzzleRankings equals -1
   const unplayedPuzzles = puzzleRankings
@@ -48,6 +52,18 @@ function nextPuzzle () {
 }
 
 nextPuzzle()
+
+async function showError(){
+  errorOccurred.value = true
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  errorOccurred.value = false;
+}
+
+async function showSuccess(){
+  successOccurred.value = true
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  successOccurred.value = false;
+}
 
 function calculateRank(timeElapsed: number, moves: number, failures: number)
 {
@@ -69,13 +85,20 @@ function calculateRank(timeElapsed: number, moves: number, failures: number)
 }
 
 function handleFailure () {
-  totalErrors.value++
+  if (currentErrors.value == 0)
+  {
+    totalErrors.value++
+    showError()
+  }
   currentErrors.value++
-  if (currentErrors.value > 2)
+  if (currentErrors.value > 0)
     allowClue.value = true
+  if(auto.value)
+    nextPuzzle()
 }
 
 function puzzleSolved ( moves: number, failures: number) {
+  showSuccess()
   totalPuzzless.value++
   currentErrors.value = 0
   solved.value = true
@@ -114,8 +137,8 @@ function sendClue(){
             <v-btn variant="outlined" @click="restartSession()">Restart Session</v-btn>
           </v-col>
           <v-col cols="12">
-            Puzzles: {{totalPuzzless}}
-            Errors: {{totalErrors}}
+            <div :class="{ success: successOccurred }">Puzzles: {{totalPuzzless}}</div>
+            <div :class="{ error: errorOccurred }">Errors: {{totalErrors}}</div>
           </v-col>
         </v-row>
       </v-col>
@@ -140,6 +163,12 @@ function sendClue(){
 </template>
 
 <style scoped>
+.success {
+  color: green;
+}
+.error {
+  color: red;
+}
 .switch{
   display: flex;
   justify-content: center;
