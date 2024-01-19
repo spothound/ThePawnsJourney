@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@datadog/browser-logs':
+    specifier: ^5.8.0
+    version: 5.8.0
+  '@types/uuid':
+    specifier: ^9.0.7
+    version: 9.0.7
   '@vueuse/core':
     specifier: ^10.7.1
     version: 10.7.1(vue@3.4.3)
@@ -14,6 +20,9 @@ dependencies:
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(typescript@5.3.3)(vue@3.4.3)
+  uuid:
+    specifier: ^9.0.1
+    version: 9.0.1
   vue:
     specifier: ^3.4.3
     version: 3.4.3(typescript@5.3.3)
@@ -173,6 +182,21 @@ packages:
       '@babel/helper-string-parser': 7.23.4
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
+
+  /@datadog/browser-core@5.8.0:
+    resolution: {integrity: sha512-aNMSB+tLu5aKm/uzswy5d6KDgGtMs2uMxsGWdZ3lmqorEHLXk5kPNTEVRJfeE49EJaWaxiTYQuuuLo0c5S0rUA==}
+    dev: false
+
+  /@datadog/browser-logs@5.8.0:
+    resolution: {integrity: sha512-7UnLrYEICdY4KLGct9q88f5Xxaad+47He1H7PPnfj1p6HDHtadjRYxb/+NQxoezWFLDpqIIgQgqr4GDQYgtOFQ==}
+    peerDependencies:
+      '@datadog/browser-rum': 5.8.0
+    peerDependenciesMeta:
+      '@datadog/browser-rum':
+        optional: true
+    dependencies:
+      '@datadog/browser-core': 5.8.0
+    dev: false
 
   /@esbuild/aix-ppc64@0.19.11:
     resolution: {integrity: sha512-FnzU0LyE3ySQk7UntJO4+qIiQgI7KoODnZg5xzXIrFJlKd2P2gwHsHY4927xj9y5PJmJSzULiUCWmv7iWnNa7g==}
@@ -682,6 +706,10 @@ packages:
   /@types/tough-cookie@4.0.5:
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
     dev: true
+
+  /@types/uuid@9.0.7:
+    resolution: {integrity: sha512-WUtIVRUZ9i5dYXefDEAI7sh9/O7jGvHg7Df/5O/gtH3Yabe5odI3UWopVR1qbPXQtvOxWu3mM4XxlYeZtMWF4g==}
+    dev: false
 
   /@types/web-bluetooth@0.0.20:
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
@@ -3327,6 +3355,11 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+    dev: false
 
   /vite-node@1.1.1(@types/node@20.10.6):
     resolution: {integrity: sha512-2bGE5w4jvym5v8llF6Gu1oBrmImoNSs4WmRVcavnG2me6+8UQntTqLiAMFyiAobp+ZXhj5ZFhI7SmLiFr/jrow==}

@@ -11,7 +11,7 @@ definePage({
 function setEloRange(min: number, max: number) {
   localStorage.setItem('eloRange', JSON.stringify(`${min}_${max}`))
 }
-const levels = ['500_1000', '1000_1500', '1500_2000', '2000_2500', '2500_3000', '3000_3500']
+const levels = ['0_500', '500_1000', '1000_1500', '1500_2000', '2000_2500', '2500_3000', '3000_3500']
 </script>
 
 <template>

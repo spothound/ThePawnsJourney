@@ -2,6 +2,27 @@
 
 import ChessPuzzle from './ChessPuzzle.vue'
 import { defineProps, ref } from 'vue'
+import { v4 as uuidv4 } from 'uuid';
+import '@datadog/browser-logs/bundle/datadog-logs'
+
+const sessionToken = localStorage.getItem('sessionToken') || uuidv4()
+localStorage.setItem('sessionToken', sessionToken)
+
+declare global {
+  interface Window {
+    DD_LOGS: any;
+  }
+}
+
+window.DD_LOGS.init({
+  clientToken: 'pubc17749f9323600ef9e82cfd995039870',
+  site: 'us5.datadoghq.com',
+  forwardErrorsToLogs: true,
+  sessionSampleRate: 100,
+})
+
+window.DD_LOGS.logger.info('User connected', { sessionToken: sessionToken})
+console.log('User connected', { sessionToken: sessionToken})
 
 const props = defineProps({
   level: {
@@ -131,7 +152,7 @@ function sendClue(){
       <v-col sm="3" cols="12" class="text-center">
         <v-row>
           <v-col cols="12">
-            Session Time: <br/>
+            Session Time:
             <StopWatch ref="sessionClockRef"/>
             <br/>
             <v-btn variant="outlined" @click="restartSession()">Restart Session</v-btn>
@@ -148,13 +169,14 @@ function sendClue(){
       <v-col sm="3" cols="12" class="text-center">
         <v-row no-gutters class="training" justify="center">
           <v-col cols="12">
-            Puzzle Time: <br/>
+            <v-switch inset class=switch v-model="auto" label="auto"></v-switch>
+            Puzzle Time:
             <StopWatch ref="puzzleClockRef"/>
           </v-col>
           <v-col cols="12" >
             <v-btn :disabled="!solved" variant="outlined" @click="nextPuzzle()">NEXT</v-btn>
-            <v-switch inset class=switch v-model="auto" label="auto"></v-switch>
             <v-btn :disabled="!allowClue" variant="outlined" @click="sendClue()">clue</v-btn>
+
           </v-col>
         </v-row>
       </v-col>
