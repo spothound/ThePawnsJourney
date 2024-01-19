@@ -45,6 +45,27 @@ nextTick(() => {
     <v-list nav density="compact">
       <AppDrawerItem v-for="route in routes" :key="route.name" :item="route" />
     </v-list>
+    <v-spacer />
+    <template #append>
+      <v-list-item class="drawer-footer px-0 d-flex flex-column justify-center">
+        <div class="text-caption pt-6 pb-1 pt-md-0 text-center" style="white-space: nowrap">
+        <a href="https://github.com/spothound/ThePawnsJourney" target="_blank">
+          <v-icon icon="mdi-github" size="x-large" class="drawer-footer-icon" color="primary" />
+        </a>
+      </div>
+      <div class="text-caption pt-6 pb-1 pt-md-0 text-center" style="white-space: nowrap">
+
+        <a href="https://github.com/spothound/" class="font-weight-bold text-primary" target="_blank">by Fran N.M.</a>
+      </div>
+     <br/>
+      <div class="text-caption pt-6 pb-1 pt-md-0 text-center" style="white-space: nowrap">
+        <v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank">
+          <v-icon left>mdi-coffee</v-icon>
+          Support this
+        </v-btn>
+      </div>
+      </v-list-item>
+    </template>
   </v-navigation-drawer>
 </template>
 
