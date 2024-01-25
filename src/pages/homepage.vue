@@ -11,7 +11,7 @@ definePage({
 function setEloRange(min: number, max: number) {
   localStorage.setItem('eloRange', JSON.stringify(`${min}_${max}`))
 }
-const levels = ['0_500', '500_1000', '1000_1500', '1500_2000', '2000_2500', '2500_3000', '3000_3500']
+
 </script>
 
 <template>
@@ -23,16 +23,16 @@ const levels = ['0_500', '500_1000', '1000_1500', '1500_2000', '2000_2500', '250
   </v-row>
   <v-row class="text-center">
     <v-col cols="12">
-      <h1>The pawn's Jouney</h1>
+      <h1>The Pawn's Journey</h1>
     </v-col>
   </v-row>
   <v-row class="text-center">
     <v-col cols="12">
-      <p>This app is designed to help you train easy chess tactics in your browser. It uses <strong>puzzless from Lichess public database</strong>.</p>
-      <p>You can pick a level (elo range) and the app will let you play different puzzless for that level.</p>
-      <p>So far, all the logic/code of the app runs in your browser (not in a server, not with a database), this means it won't store any data about your results (except locally in your browser storage data to know which ones you have solved). If you play in different devices you may get some puzzles that you have already played but since the purpose of this is practice, who cares.</p>
-      <p>If you like this project and want to support it consider <a href="https://github.com/spothound/ThePawnsJourney" target="_blank">visiting the project in GitHub</a> and opening an issue/ticket, propose changes, etc; or writting to me at navarromoralesdev@gmail.com</p>
-      <v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank"><v-icon left>mdi-coffee</v-icon>Buy me a coffe if you find this website useful for your practice and want to thank me!</v-btn>
+      <p>This app is designed to help you train easy chess tactics in your browser. It uses <strong>puzzles from Lichess public database</strong>.</p>
+      <p>You can pick a level (elo range) and the app will let you play different puzzles for that level.</p>
+      <p>So far, all the logic/code of the app runs in your browser (not in a server, nor with a database), this means it won't store any data about your results (except locally in your browser storage data to know which ones you have solved). If you play on different devices you may get some puzzles that you have already played but since the purpose of this is practice, who cares.</p>
+      <p>If you like this project and want to support it, consider <a href="https://github.com/spothound/ThePawnsJourney" target="_blank">visiting the project in GitHub</a> and opening an issue/ticket, propose changes, etc; or send me an email to navarromoralesdev@gmail.com</p>
+      <v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank"><v-icon left>mdi-coffee</v-icon>Buy me a coffee</v-btn> if you find this website useful for your practice and want to thank me!
     </v-col>
   </v-row>
   <v-row class="text-center">
@@ -41,8 +41,8 @@ const levels = ['0_500', '500_1000', '1000_1500', '1500_2000', '2000_2500', '250
     </v-col>
   </v-row>
   <v-row class="text-center">
-    <v-col cols="12" sm="6" md="4" lg="3" xl="2" class="mx-auto mb-3" v-for="level in levels" :key="level">
-      <v-btn variant="outlined" @click="router.push(`/training_${level}`)">{{ level }}</v-btn>
+    <v-col cols="12" sm="6" md="4" lg="3" xl="2" class="mx-auto mb-3">
+      <v-btn variant="outlined" @click="router.push(`/training`)">Training</v-btn>
     </v-col>
   </v-row>
 </v-container>
