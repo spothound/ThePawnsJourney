@@ -8,6 +8,8 @@ definePage({
   },
 })
 
+const levels = ['0_500', '500_1000', '1000_1500', '1500_2000', '2000_2500', '2500_3000', '3000_3500']
+
 function setEloRange(min: number, max: number) {
   localStorage.setItem('eloRange', JSON.stringify(`${min}_${max}`))
 }
@@ -41,8 +43,8 @@ function setEloRange(min: number, max: number) {
     </v-col>
   </v-row>
   <v-row class="text-center">
-    <v-col cols="12" sm="6" md="4" lg="3" xl="2" class="mx-auto mb-3">
-      <v-btn variant="outlined" @click="router.push(`/training`)">Training</v-btn>
+    <v-col cols="12" sm="6" md="4" lg="3" xl="2" class="mx-auto mb-3" v-for="level in levels" :key="level">
+      <v-btn variant="outlined" @click="router.push(`/training_${level}`)">{{ level.replace('_','-') }}</v-btn>
     </v-col>
   </v-row>
 </v-container>
