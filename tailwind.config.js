@@ -1,7 +1,12 @@
 /** @type {import('tailwindcss').Config} */
+import nested from 'postcss-nesting';
+import autoprefixer from 'autoprefixer';
+
 export default {
-  purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-  content: [],
+  content: [
+    './public/**/*.html',
+    './src/**/*.{js,jsx,ts,tsx,vue}',
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -10,6 +15,9 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    nested,
+    autoprefixer,
+  ],
 }
 

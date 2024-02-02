@@ -22,7 +22,7 @@ function setEloRange(min: number, max: number) {
       <v-col cols="12">
         <v-card class="pa-2" outlined>
           <v-img src="@/assets/logo.png" alt="App logo" class="logo" contain></v-img>
-          <v-card-title class="headline">Welcome to The Pawn's Journey</v-card-title>
+          <v-card-title class="headline font-kanit">Welcome to The Pawn's Journey</v-card-title>
           <v-card-text>This app is designed to help you improve your chess tactics. It uses puzzles from the Lichess public database.</v-card-text>
           <v-card-text>Select a level (elo range) and the app will provide puzzles suitable for that level.</v-card-text>
           <v-card-text>All the app's logic runs in your browser, not on a server or with a database. This means it won't store any data about your results (except locally in your browser storage data to track which puzzles you've solved). If you play on different devices, you may see some puzzles you've already solved, but since the purpose of this app is practice, repetition is beneficial.</v-card-text>

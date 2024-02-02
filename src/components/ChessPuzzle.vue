@@ -2,7 +2,7 @@
 import 'vue3-chessboard/style.css'
 // @ts-ignore
 import { TheChessboard, type BoardConfig, BoardApi, type MoveEvent, MoveableColor, type DrawShape } from 'vue3-chessboard'
-import { defineProps, reactive, onMounted, ref, defineEmits } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
 import captureSound from '../assets/sounds/capture-sound.mp3'
 import confirmationSound from '../assets/sounds/confirmation-sound.mp3'
 import errorSound from '../assets/sounds/error-sound.mp3'
