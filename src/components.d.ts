@@ -10,7 +10,6 @@ declare module 'vue' {
     AppBar: typeof import('./components/layout/AppBar.vue')['default']
     AppDrawer: typeof import('./components/layout/AppDrawer.vue')['default']
     AppDrawerItem: typeof import('./components/layout/AppDrawerItem.vue')['default']
-    AppFooter: typeof import('./components/layout/AppFooter.vue')['default']
     AppNotification: typeof import('./components/layout/AppNotification.vue')['default']
     AppNotificationItem: typeof import('./components/layout/AppNotificationItem.vue')['default']
     ButtonSettings: typeof import('./components/layout/ButtonSettings.vue')['default']
