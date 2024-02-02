@@ -26,8 +26,8 @@ function setEloRange(min: number, max: number) {
           <v-card-text>This app is designed to help you improve your chess tactics. It uses puzzles from the Lichess public database.</v-card-text>
           <v-card-text>Select a level (elo range) and the app will provide puzzles suitable for that level.</v-card-text>
           <v-card-text>All the app's logic runs in your browser, not on a server or with a database. This means it won't store any data about your results (except locally in your browser storage data to track which puzzles you've solved). If you play on different devices, you may see some puzzles you've already solved, but since the purpose of this app is practice, repetition is beneficial.</v-card-text>
-          <v-card-text>If you like this project and want to support it, consider <a href="https://github.com/spothound/ThePawnsJourney" target="_blank">visiting the project on GitHub</a> and opening an issue, proposing changes, etc. Alternatively, you can email me at navarromoralesdev@gmail.com</v-card-text>
-          <v-card-text>If you find this website useful and want to show your appreciation: </v-card-text><v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank" color="primary" dark><v-icon left>mdi-coffee</v-icon>Buy me a coffee</v-btn>
+          <v-card-text>If you like this project and want to support it:</v-card-text>
+          <v-card-text><v-btn href="https://github.com/spothound/ThePawnsJourney" target="_blank" color="primary" dark><v-icon left>mdi-github</v-icon>visiting the project on GitHub</v-btn></v-card-text>
         </v-card>
       </v-col>
     </v-row>
