@@ -3,7 +3,7 @@ import router from '@/plugins/router';
 definePage({
   meta: {
     icon: 'mdi-home',
-    title: 'Homepage',
+    title: 'Home',
     drawerIndex: 0,
   },
 })

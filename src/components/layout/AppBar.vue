@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useToggle, useDark } from '@vueuse/core'
 const theme = useTheme()
+const showNavIcon = ref(false)
 const { drawer } = storeToRefs(useAppStore())
 const route = useRoute()
 const breadcrumbs = computed(() => {
@@ -23,13 +24,20 @@ const isDark = useDark({
   },
 })
 const toggleDark = useToggle<true, false | null>(isDark)
+
+watchEffect(() => {
+  // Verificar si el dispositivo es táctil
+  showNavIcon.value = 'ontouchstart' in window
+})
 </script>
 
 <template>
   <v-app-bar flat>
-    <v-app-bar-nav-icon @click="drawer = !drawer" />
-    <v-breadcrumbs :items="breadcrumbs"> </v-breadcrumbs>
+    <v-app-bar-nav-icon v-if="showNavIcon" @click="drawer = !drawer" />
+    <!-- <v-breadcrumbs :items="breadcrumbs"> </v-breadcrumbs> -->
+    <h1 class="text-h6 font-weight-bold"><v-icon size="30" icon="custom:logo-3-pj"></v-icon> The Pawn's Journey</h1>
     <v-spacer />
+    <!-- Add an h1 element with logo an title -->
     <div id="app-bar"></div>
     <div>
       <v-switch
