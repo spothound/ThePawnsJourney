@@ -56,17 +56,18 @@ function setEloRange(min: number, max: number) {
               </v-sheet>
             </v-carousel-item>
           </v-carousel>
-          <v-card-title class="headline font-kanit text-blue-500 font-bold">Welcome to The Pawn's Journey</v-card-title>
-          <v-card-text>This app is designed to help you improve your chess tactics. It uses puzzles from the Lichess
-            public database.</v-card-text>
-          <v-card-text>Select a level (elo range) and the app will provide puzzles suitable for that level.</v-card-text>
-          <v-card-text>All the app's logic runs in your browser, not on a server or with a database. This means it won't
-            store any data about your results (except locally in your browser storage data to track which puzzles you've
-            solved). If you play on different devices, you may see some puzzles you've already solved, but since the
-            purpose of this app is practice, repetition is beneficial.</v-card-text>
-          <v-card-text>If you like this project and want to support it:</v-card-text>
-          <v-card-text><v-btn href="https://github.com/spothound/ThePawnsJourney" target="_blank" color="primary"
-              dark><v-icon left>mdi-github</v-icon>visiting the project on GitHub</v-btn></v-card-text>
+          <v-card-title class="headline font-kanit text-blue-500 font-bold mt-3">Welcome to The Pawn's
+            Journey</v-card-title>
+          <v-card-text>This application is designed to help you improve your chess tactics by using puzzles from the
+            public Lichess database. Choose a level (elo rank) and the application will provide you with puzzles adapted to that
+            level.</v-card-text>
+          <v-card-text>All the logic of the application runs in your browser, not on a server or with a database. This
+            means that it will not store any data about your results (except locally in your browser's storage data to
+            track the puzzles you have solved).</v-card-text>
+          <v-card-text>
+            So if you play on different devices, you may see some puzzles you have already solved, but as the purpose of this
+            app is practice, repetition is beneficial.
+          </v-card-text>
         </v-card>
         <!-- <v-card class="pa-2" outlined>
           <v-card-title class="headline">Choose Your Elo Level</v-card-title>

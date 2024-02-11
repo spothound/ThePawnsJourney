@@ -39,7 +39,7 @@ watchEffect(() => {
     <v-spacer />
     <!-- Add an h1 element with logo an title -->
     <div id="app-bar"></div>
-    <div>
+    <div class="me-5">
       <v-switch
         :model-value="isDark"
         color=""
@@ -52,7 +52,7 @@ watchEffect(() => {
         @update:model-value="toggleDark"
       ></v-switch>
     </div>
-    <v-btn
+    <!-- <v-btn
       icon
       href="https://github.com/spothound/ThePawnsJourney"
       size="small"
@@ -60,7 +60,7 @@ watchEffect(() => {
       target="_blank"
     >
       <v-icon size="30" icon="mdi-github"></v-icon>
-    </v-btn>
+    </v-btn> -->
   </v-app-bar>
 </template>
 
