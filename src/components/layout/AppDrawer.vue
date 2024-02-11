@@ -30,6 +30,7 @@ nextTick(() => {
     :rail="rail"
     @mouseenter="isHovering = true"
     @mouseleave="isHovering = false"
+    @click="drawer = false"
   >
     <template #prepend>
       <v-list dense nav>
@@ -39,7 +40,7 @@ nextTick(() => {
               icon="mdi-menu-close"
               size="x-large"
               class="drawer-header-icon"
-              :class="{ 'rotate-90': isHovering }"
+              :class="{ 'rotate-90': isHovering || (mobile && drawer) }"
               color="primary"
             />
           </template>
@@ -74,7 +75,7 @@ nextTick(() => {
           </a>
         </div>
         <div
-          class="text-caption pt-6 pb-1 pt-md-0 text-center"
+          class="text-caption pt-2 pb-8 pt-md-0 text-center"
           style="white-space: nowrap"
         >
           <a
@@ -84,16 +85,16 @@ nextTick(() => {
             >by Fran N.M.</a
           >
         </div>
-        <br />
+        <!-- <br />
         <div
           class="text-caption pt-6 pb-1 pt-md-0 text-center"
           style="white-space: nowrap"
         >
-          <v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank">
+           <v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank">
             <v-icon left>mdi-coffee</v-icon>
             Support this
           </v-btn>
-        </div>
+        </div> -->
       </v-list-item>
     </template>
   </v-navigation-drawer>
