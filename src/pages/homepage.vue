@@ -6,30 +6,10 @@ definePage({
     drawerIndex: 0,
   },
 })
-import router from '@/plugins/router';
-// import { ref } from 'vue';
-// import { definePage } from 'vite-plugin-ssr/vue';
-
-const levels = ['0_500', '500_1000', '1000_1500', '1500_2000', '2000_2500', '2500_3000', '3000_3500'];
-
-const images = [
-  'src/assets/bg1.jpg',
-  'src/assets/bg2.jpg',
-  'src/assets/bg3.jpg',
-  'src/assets/bg4.jpg',
-  'src/assets/bg5.jpg'
-];
-
-const quotes = [
-  { text: "Every chess master was once a beginner.", author: "Irving Chernev" },
-  { text: "If you wish to succeed, you must brave the risk of failure.", author: "Garry Kasparov" },
-  { text: "Chess is an infinitely complex game, which one can play in infinitely numerous & varied ways.", author: "Vladimir Kramnik" },
-  { text: "You can only get good at chess if you love the game.", author: "Bobby Fischer" },
-  { text: "Without the element of enjoyment, it is not worth trying to excel at anything.", author: "Magnus Carlsen" }
-];
-
-// const slides = ref(quotes.map(quote => `${quote.text} - ${quote.author}`));
-
+// this file contains the images paths and the quotes
+import data from '@/data/quotes.json';
+// generate as many random quotes as images
+const randomQuotes = data.quotes.sort(() => Math.random() - 0.5).slice(0, data.images.length);
 function setEloRange(min: number, max: number) {
   localStorage.setItem('eloRange', JSON.stringify(`${min}_${max}`))
 }
@@ -41,16 +21,16 @@ function setEloRange(min: number, max: number) {
       <v-col cols="12">
         <v-card class="pa-2" outlined>
           <v-carousel cycle height="300" hide-delimiter-background show-arrows="hover" class="rounded-md">
-            <v-carousel-item v-for="(quote, i) in quotes" :key="i">
+            <v-carousel-item v-for="(image, i) in data.images" :key="i">
               <v-sheet height="100%">
-                <div :style="{ backgroundImage: `url(${images[i]})` }"
+                <div :style="{ backgroundImage: `url(${image})` }"
                   class="d-flex fill-height flex-column justify-center align-center text-center cover font-nunito">
                   <div class="text-h5 text-overlay mx-2 mb-2 font-bold">
-                    {{ quote.text }}
+                    {{ randomQuotes[i].text }}
                   </div>
                   <!-- add paddint top -->
                   <div class="text-h6 p-2 text-overlay">
-                    - {{ quote.author }}
+                    - {{ randomQuotes[i].author }} -
                   </div>
                 </div>
               </v-sheet>
@@ -59,13 +39,15 @@ function setEloRange(min: number, max: number) {
           <v-card-title class="headline font-kanit text-blue-500 font-bold mt-3">Welcome to The Pawn's
             Journey</v-card-title>
           <v-card-text>This application is designed to help you improve your chess tactics by using puzzles from the
-            public Lichess database. Choose a level (elo rank) and the application will provide you with puzzles adapted to that
+            public Lichess database. Choose a level (elo rank) and the application will provide you with puzzles adapted
+            to that
             level.</v-card-text>
           <v-card-text>All the logic of the application runs in your browser, not on a server or with a database. This
             means that it will not store any data about your results (except locally in your browser's storage data to
             track the puzzles you have solved).</v-card-text>
           <v-card-text>
-            So if you play on different devices, you may see some puzzles you have already solved, but as the purpose of this
+            So if you play on different devices, you may see some puzzles you have already solved, but as the purpose of
+            this
             app is practice, repetition is beneficial.
           </v-card-text>
         </v-card>
