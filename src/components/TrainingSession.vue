@@ -2,26 +2,6 @@
 import ChessPuzzle from './ChessPuzzle.vue'
 import { ref } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
-import '@datadog/browser-logs/bundle/datadog-logs'
-
-const sessionToken = localStorage.getItem('sessionToken') || uuidv4()
-localStorage.setItem('sessionToken', sessionToken)
-
-declare global {
-  interface Window {
-    DD_LOGS: any
-  }
-}
-
-window.DD_LOGS.init({
-  clientToken: 'pubc17749f9323600ef9e82cfd995039870',
-  site: 'us5.datadoghq.com',
-  forwardErrorsToLogs: true,
-  sessionSampleRate: 100,
-})
-
-window.DD_LOGS.logger.info('User connected', { sessionToken: sessionToken })
-console.log('User connected', { sessionToken: sessionToken })
 
 const props = defineProps({
   level: {

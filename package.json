@@ -13,7 +13,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@datadog/browser-logs": "^5.8.0",
     "@types/uuid": "^9.0.7",
     "@vueuse/core": "^10.7.1",
     "echarts": "^5.4.3",
