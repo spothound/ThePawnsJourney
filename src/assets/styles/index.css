@@ -1,2 +1,6 @@
 @import 'global';
 @import 'scrollbar';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

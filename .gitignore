@@ -25,3 +25,5 @@ playwright-report/
 *.njsproj
 *.sln
 *.sw?
+
+TODO.md

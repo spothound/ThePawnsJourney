@@ -16,28 +16,38 @@ const drawer = computed({
 const rail = computed(() => !drawerStored.value && !mobile.value)
 routes.sort((a, b) => (a.meta?.drawerIndex ?? 99) - (b.meta?.drawerIndex ?? 98))
 
+const isHovering = ref(false)
+
 nextTick(() => {
   drawerStored.value = false
 })
 </script>
 
 <template>
-  <v-navigation-drawer v-model="drawer" :expand-on-hover="rail" :rail="rail">
+  <v-navigation-drawer
+    v-model="drawer"
+    :expand-on-hover="rail"
+    :rail="rail"
+    @mouseenter="isHovering = true"
+    @mouseleave="isHovering = false"
+    @click="drawer = false"
+  >
     <template #prepend>
       <v-list dense nav>
         <v-list-item class="pa-1">
           <template #prepend>
             <v-icon
-              icon="custom:vitify"
+              icon="mdi-menu-close"
               size="x-large"
               class="drawer-header-icon"
+              :class="{ 'rotate-90': isHovering || (mobile && drawer) }"
               color="primary"
             />
           </template>
           <v-list-item-title
             class="text-h6 font-weight-bold"
             style="line-height: 2rem"
-          > Pawn's<span class="text-primary">Journey</span>
+            >Select Level
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -48,22 +58,43 @@ nextTick(() => {
     <v-spacer />
     <template #append>
       <v-list-item class="drawer-footer px-0 d-flex flex-column justify-center">
-        <div class="text-caption pt-6 pb-1 pt-md-0 text-center" style="white-space: nowrap">
-        <a href="https://github.com/spothound/ThePawnsJourney" target="_blank">
-          <v-icon icon="mdi-github" size="x-large" class="drawer-footer-icon" color="primary" />
-        </a>
-      </div>
-      <div class="text-caption pt-6 pb-1 pt-md-0 text-center" style="white-space: nowrap">
-
-        <a href="https://github.com/spothound/" class="font-weight-bold text-primary" target="_blank">by Fran N.M.</a>
-      </div>
-     <br/>
-      <div class="text-caption pt-6 pb-1 pt-md-0 text-center" style="white-space: nowrap">
-        <v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank">
-          <v-icon left>mdi-coffee</v-icon>
-          Support this
-        </v-btn>
-      </div>
+        <div
+          class="text-caption pt-6 pb-1 pt-md-0 text-center"
+          style="white-space: nowrap"
+        >
+          <a
+            href="https://github.com/spothound/ThePawnsJourney"
+            target="_blank"
+          >
+            <v-icon
+              icon="mdi-github"
+              size="x-large"
+              class="drawer-footer-icon"
+              color="primary"
+            />
+          </a>
+        </div>
+        <div
+          class="text-caption pt-2 pb-8 pt-md-0 text-center"
+          style="white-space: nowrap"
+        >
+          <a
+            href="https://github.com/spothound/"
+            class="font-weight-bold text-primary"
+            target="_blank"
+            >by Fran N.M.</a
+          >
+        </div>
+        <!-- <br />
+        <div
+          class="text-caption pt-6 pb-1 pt-md-0 text-center"
+          style="white-space: nowrap"
+        >
+           <v-btn href="https://www.buymeacoffee.com/fnavarro" target="_blank">
+            <v-icon left>mdi-coffee</v-icon>
+            Support this
+          </v-btn>
+        </div> -->
       </v-list-item>
     </template>
   </v-navigation-drawer>

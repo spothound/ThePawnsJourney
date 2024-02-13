@@ -1,0 +1,162 @@
+{
+  "images": ["bg1.jpg", "bg2.jpg", "bg3.jpg", "bg4.jpg", "bg5.jpg"],
+  "quotes": [
+    {
+      "text": "Every chess master was once a beginner.",
+      "author": "Irving Chernev"
+    },
+    {
+      "text": "Chess is a war over the board. The object is to crush the opponent’s mind.",
+      "author": "Bobby Fischer"
+    },
+    {
+      "text": "Chess is the struggle against the error.",
+      "author": "Johannes Zukertort"
+    },
+    {
+      "text": "Chess is the gymnasium of the mind.",
+      "author": "Blaise Pascal"
+    },
+    {
+      "text": "Even the laziest King flees wildly in the face of a double check!",
+      "author": "Aaron Nimzowitsch"
+    },
+    {
+      "text": "We cannot resist the fascination of sacrifice, since a passion for sacrifices is part of a Chess player's nature.",
+      "author": "Rudolf Spielman"
+    },
+    {
+      "text": "Nothing excites jaded Grandmasters more than a theoretical novelty.",
+      "author": "Dominic Lawson"
+    },
+    {
+      "text": "A win by an unsound combination, however showy, fills me with artistic horror",
+      "author": "Wilhelm Steinitz"
+    },
+    {
+      "text": "Only the player with the initiative has the right to attack",
+      "author": "Wilhelm Steinitz"
+    },
+    {
+      "text": "Chess is rarely a game of ideal moves. Almost always, a player faces a series of difficult consequences whichever move he makes.",
+      "author": "David Shenk"
+    },
+    {
+      "text": "When you see a good move, look for a better one.",
+      "author": "Emanuel Lasker"
+    },
+    {
+      "text": "Half the variations which are calculated in a tournament game turn out to be completely superfluous. Unfortunately, no one knows in advance which half.",
+      "author": "Jan Timman"
+    },
+    {
+      "text": "Even a poor plan is better than no plan at all.",
+      "author": "Mikhail Chigorin"
+    },
+    {
+      "text": "Tactics is knowing what to do when there is something to do; strategy is knowing what to do when there is nothing to do.",
+      "author": "Savielly Tartakower"
+    },
+    {
+      "text": "In life, as in chess, forethought wins.",
+      "author": "Charles Buxton"
+    },
+    {
+      "text": "You may learn much more from a game you lose than from a game you win. You will have to lose hundreds of games before becoming a good player.",
+      "author": "José Raúl Capablanca"
+    },
+    {
+      "text": "I don’t believe in psychology. I believe in good moves.",
+      "author": "Bobby Fischer"
+    },
+    {
+      "text": "Play the opening like a book, the middlegame like a magician, and the endgame like a machine.",
+      "author": "Rudolph Spielmann"
+    },
+    {
+      "text": "I used to attack because it was the only thing I knew. Now I attack because I know it works best.",
+      "author": "Garry Kasparov"
+    },
+    {
+      "text": "It’s always better to sacrifice your opponent’s men.",
+      "author": "Savielly Tartakower"
+    },
+    {
+      "text": "One doesn’t have to play well, it’s enough to play better than your opponent.",
+      "author": "Siegbert Tarrasch"
+    },
+    {
+      "text": "Up to this point, White has been following well-known analysis. But now he makes a fatal error: he begins to use his own head.",
+      "author": "Siegbert Tarrasch"
+    },
+    {
+      "text": "Of chess, it has been said that life is not long enough for it, but that is the fault of life, not chess.",
+      "author": "William Napier"
+    },
+    {
+      "text": "Chess is beautiful enough to waste your life for.",
+      "author": "Hans Ree"
+    },
+    {
+      "text": "A chess game in progress is… a cosmos unto itself, fully insulated from an infant’s cry, an erotic invitation, or war.",
+      "author": "David Shenk"
+    },
+    {
+      "text": "It will be cheering to know that many people are skillful chess players, though in many instances their brains, in a general way, compare unfavorably with the cognitive faculties of a rabbit.",
+      "author": "James Mortimer"
+    },
+    {
+      "text": "The pin is mightier than the sword.",
+      "author": "Fred Reinfeld"
+    },
+    {
+      "text": "The only thing chess players have in common is chess.",
+      "author": "Lodewijk Prins"
+    },
+    {
+      "text": "Those who say they understand chess, understand nothing.",
+      "author": "Robert Hübner"
+    },
+    {
+      "text": "One bad move nullifies forty good ones.",
+      "author": "Bernhard Horwitz"
+    },
+    {
+      "text": "If your opponent offers you a draw, try to work out why he thinks he’s worse off.",
+      "author": "Nigel Short"
+    },
+    {
+      "text": "Your body has to be in top condition. Your chess deteriorates as your body does. You can’t separate body and mind.",
+      "author": "Bobby Fisher"
+    },
+    {
+      "text": "The hardest game to win is a won game",
+      "author": "Emanuel Lasker"
+    },
+    { "text": "Chess is not for timid souls.", "author": "Wilhelm Steinitz" },
+    {
+      "text": "Chess is a forcing house where the fruits of character can ripen more fully than in life.",
+      "author": "Edward Morgan Forster"
+    },
+    {
+      "text": "A king may be the most important piece on the chessboard; however, the queen is the most powerful.",
+      "author": "Karim R. Ellis"
+    },
+    {
+      "text": "To venture an opinion is like moving a piece at chess: it may be taken, but it forms the beginning of a game that is won.",
+      "author": "Johann Wolfgang von Goethe"
+    },
+    {
+      "text": "It is no easy matter to reply correctly to [Emanuel] Lasker's bad moves.",
+      "author": "W.H.K. Pollock"
+    },
+    {
+      "text": "For in the idea of chess and the development of the chess mind we have a picture of the intellectual struggle of mankind.",
+      "author": "Richard Réti"
+    },
+    {
+      "text": "Chess, like love, is infectious at any age.",
+      "author": "Salo Flohr"
+    }
+  ]
+}

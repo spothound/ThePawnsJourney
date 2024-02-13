@@ -3,6 +3,7 @@
   <AppBar />
   <v-main>
     <router-view />
+    <AppFooter />
   </v-main>
 </template>
 
@@ -11,7 +12,7 @@ import { useTitle } from '@vueuse/core'
 const route = useRoute()
 const title = computed(() => {
   const title = route.meta?.title || route.matched[0].meta?.title || ''
-  return title ? `${title} | The Pawn´s Journey` : 'The Pawn´s Journey'
+  return title.length > 0 ? title : 'The Pawn\'s Journey'
 })
 useTitle(title)
 </script>

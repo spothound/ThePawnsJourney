@@ -27,6 +27,7 @@ The Pawn's Journey is a Vue 3 application that helps chess players improve their
 - Progress tracking
 
 ## Getting Started
+
 ```
 npx degit spothound/ThePawnsJourney ThePawnsJourney
 cd ThePawnsJourney
