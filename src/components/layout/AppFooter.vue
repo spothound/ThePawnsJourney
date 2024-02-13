@@ -20,7 +20,7 @@ const icons = ref([
             <div>If you like this project and want to support it:</div>
             <div>
                 <v-btn href="https://github.com/spothound/ThePawnsJourney" target="_blank" dark class="bg-black mx-2 mt-3">
-                    <v-icon left>mdi-github</v-icon>visiting the project on GitHub</v-btn>
+                    <v-icon left class="mr-1">mdi-github</v-icon>visiting the project on GitHub</v-btn>
             </div>
         </div>
 
