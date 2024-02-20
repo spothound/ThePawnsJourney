@@ -19,6 +19,7 @@ declare module 'vue' {
     ChartPie: typeof import('./components/demo-charts/ChartPie.vue')['default']
     ChartRadar: typeof import('./components/demo-charts/ChartRadar.vue')['default']
     ChessPuzzle: typeof import('./components/ChessPuzzle.vue')['default']
+    Puzzle: typeof import('./components/Puzzle.vue')['default']
     RankingView: typeof import('./components/RankingView.vue')['default']
     RouterWrapper: typeof import('./components/layout/RouterWrapper.vue')['default']
     StatsCard: typeof import('./components/StatsCard.vue')['default']
