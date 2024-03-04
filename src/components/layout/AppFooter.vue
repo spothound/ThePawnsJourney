@@ -10,17 +10,18 @@ const icons = ref([
 </script>
 
 <template>
-    <v-footer class="text-center d-flex flex-column pb-5">
+    <v-footer class="text-center flex flex-column pb-5">
         <!-- In case of adding social media, uncomment -->
         <!-- <div>
             <v-btn v-for="icon in icons" :key="icon" class="mx-4" :icon="icon" variant="text"></v-btn>
         </div> -->
 
-        <div class="py-4 my-3 bg-indigo rounded-md">
-            <div>If you like this project and want to support it:</div>
+        <div class="px-2 py-4 my-3 bg-indigo rounded-md">
+            <div>If you enjoy this project and want to show your support, visit its GitHub repository</div>
             <div>
-                <v-btn href="https://github.com/spothound/ThePawnsJourney" target="_blank" dark class="bg-black mx-2 mt-3">
-                    <v-icon left class="mr-1">mdi-github</v-icon>visiting the project on GitHub</v-btn>
+                <v-btn href="https://github.com/spothound/ThePawnsJourney" target="_blank" dark
+                    class="bg-black mx-2 mt-3" :block="false">
+                    <v-icon left class="mr-1">mdi-github</v-icon> Pawn's Journey</v-btn>
             </div>
         </div>
 

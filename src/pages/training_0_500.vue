@@ -11,15 +11,7 @@ definePage({
 </script>
 
 <template>
-  <div class="wrapper full-size">
-    <TrainingSession :puzzle-colection="data" :level="0"/>
+  <div class="wrapper w-full">
+    <TrainingSession :puzzle-colection="data" :level="0" />
   </div>
 </template>
-
-<style scoped>
-.full-size {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-</style>
