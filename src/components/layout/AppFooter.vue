@@ -16,7 +16,7 @@ const icons = ref([
             <v-btn v-for="icon in icons" :key="icon" class="mx-4" :icon="icon" variant="text"></v-btn>
         </div> -->
 
-        <div class="px-2 py-4 my-3 bg-indigo rounded-md">
+        <div class="px-2 md:px-6 py-4 my-3 bg-indigo rounded-md max-w-[660px]">
             <div>If you enjoy this project and want to show your support, visit its GitHub repository</div>
             <div>
                 <v-btn href="https://github.com/spothound/ThePawnsJourney" target="_blank" dark

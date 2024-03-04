@@ -97,9 +97,9 @@ async function showSuccess() {
 const textClasses = computed(() => {
   return {
     'text-lime-500': successOccurred.value,
-    'text-rose-800': errorOccurred.value
-  };
-});
+    'text-rose-800': errorOccurred.value,
+  }
+})
 
 function calculateRank(timeElapsed: number, moves: number, failures: number) {
   let rank = 0
@@ -160,51 +160,125 @@ function sendClue() {
 </script>
 
 <template>
-  <v-container fluid>
+  <v-container fluid class="overflow-hidden flex justify-center flex-col">
+    <!-- puzzle timer -->
     <v-row class="flex justify-center">
-      <v-sheet :elevation="17" border rounded
-        class="flex items-center px-3 mt-2 mb-6 xxxs:mb-2 xxs:mb-3 bg-lime-600 text-gray-900">
-        <span class="text-xl xxxs:text-sm xxs:text-sm mr-3 font-bold">Puzzle Time:</span>
+      <v-sheet
+        :elevation="17"
+        :border="true"
+        rounded
+        class="flex items-center px-3 mt-2 mb-6 xxxs:mb-2 xxs:mb-3 bg-lime-600 text-gray-900 md:text-2xl"
+      >
+        <span
+          class="text-xl xxxs:text-sm xxs:text-sm md:text-3xl xl:landscape:text-xl mr-3 font-bold"
+          >Puzzle Time:</span
+        >
         <StopWatch ref="puzzleClockRef" />
       </v-sheet>
     </v-row>
-    <v-row class="flex justify-center">
-      <ChessPuzzle ref="puzzleRef" :key="(puzzleColection[currentPuzzle] as any).PuzzleId"
-        :puzzle-data="puzzleColection[currentPuzzle] as any" @failure="handleFailure" @solved="puzzleSolved" />
-    </v-row>
-    <v-row class="flex justify-evenly xxxs:justify-center items-center xxs:-mt-2 xs:max-w-sm xs:mx-auto md:max-w-xl">
-      <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
-        <v-btn rounded="xs" color="#3b83f6" plain append-icon="mdi-lightbulb-alert-outline" :disabled="!allowClue"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-          @click="sendClue()">Hint</v-btn>
+    <!-- board, buttons and sprint timer -->
+    <v-row class="flex">
+      <!-- board -->
+      <v-col cols="12" lg="6" class="flex justify-center p-0">
+        <ChessPuzzle
+          ref="puzzleRef"
+          :key="(puzzleColection[currentPuzzle] as any).PuzzleId"
+          :puzzle-data="puzzleColection[currentPuzzle] as any"
+          @failure="handleFailure"
+          @solved="puzzleSolved"
+        >
+        </ChessPuzzle>
       </v-col>
-      <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
-        <v-switch inset class="switch flex justify-center" v-model="auto" label="Auto" color="indigo" value="Auto"
-          hide-details></v-switch>
+      <!--  </v-row>
+        <v-row class="flex justify-evenly xxxs:justify-center items-center xxs:-mt-2 xs:max-w-sm xs:mx-auto md:max-w-xl"> -->
+      <v-col cols="12" lg="6" class="p-0 mt-4 xxxs:mt-2 xxs:mt-0">
+        <!-- actions -->
+        <v-row
+          class="flex justify-evenly xxxs:justify-center items-center xxs:-mt-2 xs:max-w-sm xs:mx-auto md:max-w-xl"
+        >
+          <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
+            <v-btn
+              size="large"
+              rounded="xs"
+              color="#3b83f6"
+              plain
+              append-icon="mdi-lightbulb-alert-outline"
+              :disabled="!allowClue"
+              class="bg-blue-500 hover:bg-blue-700 text-white md:text-2xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              @click="sendClue()"
+              >Hint</v-btn
+            >
+          </v-col>
+          <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
+            <v-switch
+              v-model="auto"
+              inset
+              label="Auto"
+              color="indigo"
+              value="Auto"
+              hide-details
+              class="switch flex justify-center md:!text-3xl auto-label"
+            ></v-switch>
+          </v-col>
+          <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
+            <v-btn
+              size="large"
+              rounded="xs"
+              color="#10b981"
+              plain
+              append-icon="mdi-skip-next-outline"
+              :disabled="!solved"
+              class="bg-emerald-500 hover:bg-emerald-700 text-white md:text-2xl font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:-mt-4"
+              @click="nextPuzzle()"
+              >Next</v-btn
+            >
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
-        <v-btn rounded="xs" color="#10b981" plain append-icon="mdi-skip-next-outline" :disabled="!solved"
-          class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:-mt-4"
-          @click="nextPuzzle()">Next</v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12" class="flex justify-center xxxs:-mt-3 xxs:-mt-5">
-        <div :class="textClasses" class="font-bold transition-all duration-300 text-2xl xxxs:text-xl xxs:text-xl">
+      <!-- </v-row>
+        <v-row> -->
+      <!-- solved -->
+      <v-col cols="12" class="flex justify-center xxxs:-mt-1 xxs:-mt-5">
+        <div
+          :class="textClasses"
+          class="font-bold transition-all duration-300 text-2xl xxxs:text-xl xxs:text-xl"
+        >
           Solved: {{ totalPuzzless }}/{{ totalPuzzless + totalErrors }}
         </div>
       </v-col>
-    </v-row>
-    <v-row class="flex justify-evenly items-center xs:max-w-sm xs:mx-auto md:max-w-lg">
-      <v-col cols="auto" class="flex justify-center xxxs:-mt-3 xxs:-mt-4">
-        <v-sheet :elevation="17" border rounded class="flex items-center px-3 bg-blue-900 text-white">
-          <span class="text-xl xxxs:text-base xxs:text-base mr-3 font-bold">Sprint:</span>
-          <StopWatch ref="sessionClockRef" />
-        </v-sheet>
-      </v-col>
-      <v-col cols="auto" class="flex justify-center">
-        <v-btn plain @click="restartSession()" color="#e11d48" rounded="xs"
-          class="bg-rose-600 hover:bg-rose-800 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:text-base xxs:text-base xxxs:-mt-3 xxs:-mt-4">Restart</v-btn>
+      <!-- </v-row>
+    <v-row class="flex justify-evenly items-center xs:max-w-sm xs:mx-auto md:max-w-lg"> -->
+      <!-- sprint timer and restart button -->
+      <v-col cols="12" class="flex justify-center">
+        <v-row
+          class="flex justify-evenly items-center xs:max-w-sm xs:mx-auto md:max-w-lg"
+        >
+          <v-col cols="auto" class="flex justify-center xxxs:-mt-2 xxs:-mt-4">
+            <v-sheet
+              :elevation="17"
+              :border="true"
+              rounded
+              class="flex items-center px-3 bg-blue-900 text-white md:text-xl"
+            >
+              <span
+                class="text-xl xxxs:text-base xxs:text-base md:text-3xl mr-3 font-bold"
+                >Sprint:</span
+              >
+              <StopWatch ref="sessionClockRef" />
+            </v-sheet>
+          </v-col>
+          <v-col cols="auto" class="flex justify-center">
+            <v-btn
+              plain
+              size="large"
+              color="#e11d48"
+              rounded="xs"
+              class="bg-rose-600 hover:bg-rose-800 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:text-base xxs:text-base md:text-2xl xxxs:-mt-2 xxs:-mt-4"
+              @click="restartSession()"
+              >Restart</v-btn
+            >
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>

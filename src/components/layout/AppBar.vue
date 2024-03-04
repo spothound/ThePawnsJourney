@@ -29,24 +29,42 @@ watchEffect(() => {
   // Verificar si el dispositivo es táctil
   showNavIcon.value = 'ontouchstart' in window
 })
-
-const iconSize = computed(() => (window.innerWidth < 600 ? 40 : 32))
+const iconSize = computed(() => {
+  if (window.innerWidth < 600) {
+    return 30
+  } else if (window.innerWidth >= 600 && window.innerWidth < 960) {
+    return 40
+  } else {
+    return 50
+  }
+})
 </script>
 
 <template>
   <v-app-bar flat>
     <v-app-bar-nav-icon v-if="showNavIcon" @click="drawer = !drawer" />
     <!-- <v-breadcrumbs :items="breadcrumbs"> </v-breadcrumbs> -->
-    <h1 class="flex items-center text-h6 xxxs:text-lg xxs:text-lg font-weight-bold"><v-icon :size="iconSize"
-        icon="custom:logo-3-pj" class="me-2"></v-icon> The
-      Pawn's
-      Journey</h1>
+    <h1
+      class="flex items-center text-h6 xxxs:text-lg xxs:text-lg md:text-3xl font-weight-bold"
+    >
+      <v-icon :size="iconSize" icon="custom:logo-3-pj" class="me-2"></v-icon>
+      The Pawn's Journey
+    </h1>
     <v-spacer />
     <!-- Add an h1 element with logo an title -->
     <div id="app-bar"></div>
     <div class="me-5">
-      <v-switch :model-value="isDark" color="" hide-details density="compact" inset false-icon="mdi-white-balance-sunny"
-        true-icon="mdi-weather-night" style="opacity: 0.8" @update:model-value="toggleDark"></v-switch>
+      <v-switch
+        :model-value="isDark"
+        color=""
+        hide-details
+        density="compact"
+        inset
+        false-icon="mdi-white-balance-sunny"
+        true-icon="mdi-weather-night"
+        style="opacity: 0.8"
+        @update:model-value="toggleDark"
+      ></v-switch>
     </div>
     <!-- <v-btn
       icon
