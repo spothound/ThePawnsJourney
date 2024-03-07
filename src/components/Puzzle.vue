@@ -2,7 +2,7 @@
 import 'vue3-chessboard/style.css'
 
 // @ts-ignore
-import { TheChessboard, type BoardConfig, BoardApi, type MoveEvent, MoveableColor, type DrawShape } from 'vue3-chessboard'
+import { TheChessboard, type BoardConfig, BoardApi, type MoveEvent, Color, MoveableColor, type DrawShape } from 'vue3-chessboard'
 import { reactive, onMounted, ref } from 'vue'
 import captureSound from '../assets/sounds/capture-sound.mp3'
 import confirmationSound from '../assets/sounds/confirmation-sound.mp3'
@@ -29,10 +29,11 @@ async function getPuzzleData(puzzleId: string) {
   return puzzleData;
 }
 
-let puzzleData: LichessPuzzleData | undefined;
-let playerColor: MoveableColor = 'white';
-let pendingMoves: string[] = []
-let pgnMoves: number = 0
+let puzzleData: LichessPuzzleData = await getPuzzleData(props.puzzleId);
+
+let pgnMoves: number = puzzleData.game.pgn.split(' ').length
+let pendingMoves: string[] = puzzleData.puzzle.solution
+let playerColor = pgnMoves % 2 === 0 ? 'white' as MoveableColor: 'black' as MoveableColor;
 
 // Variables
 let boardAPI: BoardApi | undefined
@@ -45,7 +46,7 @@ const boardConfig: BoardConfig = reactive({
   viewOnly: false,
   animation: { enabled: true },
   draggable: { enabled: true },
-  orientation: playerColor,
+  orientation: playerColor as Color,
 })
 
 // Functions
@@ -95,7 +96,12 @@ function handlePlayerMove (move: MoveEvent) {
   }
   if (validMove(move.lan)) {
     pendingMoves = pendingMoves.slice(1)
-    runEnemyMove()
+    if(!move.hasOwnProperty('promotion'))
+    {
+      runEnemyMove()
+    } else {
+      setTimeout(runEnemyMove, 200);
+    }
   } else {
     invalidMove.value = true
     new Audio(errorSound).play()
@@ -137,18 +143,10 @@ nextTick(() => {
 
 onMounted(async () => {
 
-  puzzleData = await getPuzzleData(props.puzzleId);
-
-  pgnMoves = puzzleData.game.pgn.split(' ').length
-  pendingMoves = puzzleData.puzzle.solution
-  playerColor = pgnMoves % 2 === 0 ? 'white' : 'black';
-
   runPGN(puzzleData.game.pgn)
 
   window.addEventListener('resize', resizeBoard);
   resizeBoard()
-  playerColor = boardAPI?.getLastMove()?.color === 'w' ? 'black' : 'white'
-  console.log('mounted')
 })
 
 function goBack () {
@@ -160,6 +158,7 @@ function goBack () {
 </script>
 
 <template>
+
   <TheChessboard class="chessboard-visualization" @move="handleMove" @board-created="(api: any) => (boardAPI = api)" :player-color="playerColor" :board-config="boardConfig" reactive-config />
 </template>
 
