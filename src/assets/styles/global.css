@@ -64,6 +64,10 @@ h6 {
   height: 100%;
 }
 
+.auto-label label {
+  @apply text-2xl;
+}
+
 @media (min-width: 768px) {
   .auto-label label {
     @apply text-3xl;

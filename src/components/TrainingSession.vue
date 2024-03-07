@@ -160,41 +160,35 @@ function sendClue() {
 </script>
 
 <template>
-  <v-container fluid class="overflow-hidden flex justify-center flex-col">
+  <v-container fluid class="overflow-hidden">
     <!-- puzzle timer -->
-    <v-row class="flex justify-center">
-      <v-sheet
-        :elevation="17"
-        :border="true"
-        rounded
-        class="flex items-center px-3 mt-2 mb-6 xxxs:mb-2 xxs:mb-3 bg-lime-600 text-gray-900 md:text-2xl"
-      >
-        <span
-          class="text-xl xxxs:text-sm xxs:text-sm md:text-3xl xl:landscape:text-xl mr-3 font-bold"
-          >Puzzle Time:</span
+    <v-row class="grid">
+      <v-col class="p-0 text-2xl xxxs:text-xl font-bold mb-2 mx-auto w-11/12">
+        <v-sheet
+          :elevation="17"
+          :border="true"
+          rounded
+          class="bg-lime-600 text-gray-900 text-center pb-[3px]"
         >
-        <StopWatch ref="puzzleClockRef" />
-      </v-sheet>
-    </v-row>
-    <!-- board, buttons and sprint timer -->
-    <v-row class="flex">
+          <span class="font-semibold mr-2">Puzzle Time:</span>
+          <StopWatch ref="puzzleClockRef" />
+        </v-sheet>
+      </v-col>
       <!-- board -->
-      <v-col cols="12" lg="6" class="flex justify-center p-0">
+      <v-col class="p-0 mb-3 xxxs:mb-2 md:w-full">
         <ChessPuzzle
           ref="puzzleRef"
           :key="(puzzleColection[currentPuzzle] as any).PuzzleId"
-          :puzzle-data="puzzleColection[currentPuzzle] as any"
+          :puzzle-data="puzzleColection[currentPuzzle] as Record<string, any>"
           @failure="handleFailure"
           @solved="puzzleSolved"
         >
         </ChessPuzzle>
       </v-col>
-      <!--  </v-row>
-        <v-row class="flex justify-evenly xxxs:justify-center items-center xxs:-mt-2 xs:max-w-sm xs:mx-auto md:max-w-xl"> -->
-      <v-col cols="12" lg="6" class="p-0 mt-4 xxxs:mt-2 xxs:mt-0">
+      <v-col class="p-0">
         <!-- actions -->
         <v-row
-          class="flex justify-evenly xxxs:justify-center items-center xxs:-mt-2 xs:max-w-sm xs:mx-auto md:max-w-xl"
+          class="flex justify-center items-center xxs:-mt-2 xs:max-w-md xs:mx-auto md:max-w-xl"
         >
           <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
             <v-btn
@@ -204,12 +198,12 @@ function sendClue() {
               plain
               append-icon="mdi-lightbulb-alert-outline"
               :disabled="!allowClue"
-              class="bg-blue-500 hover:bg-blue-700 text-white md:text-2xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              class="bg-blue-500 hover:bg-blue-700 text-white text-xl xxs:text-base md:text-2xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
               @click="sendClue()"
               >Hint</v-btn
             >
           </v-col>
-          <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
+          <v-col cols="auto" class="flex justify-center px-2">
             <v-switch
               v-model="auto"
               inset
@@ -217,7 +211,7 @@ function sendClue() {
               color="indigo"
               value="Auto"
               hide-details
-              class="switch flex justify-center md:!text-3xl auto-label"
+              class="switch flex justify-center auto-label"
             ></v-switch>
           </v-col>
           <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
@@ -228,52 +222,44 @@ function sendClue() {
               plain
               append-icon="mdi-skip-next-outline"
               :disabled="!solved"
-              class="bg-emerald-500 hover:bg-emerald-700 text-white md:text-2xl font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:-mt-4"
+              class="bg-emerald-500 hover:bg-emerald-700 text-white text-xl xxs:text-base font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:-mt-4"
               @click="nextPuzzle()"
               >Next</v-btn
             >
           </v-col>
         </v-row>
       </v-col>
-      <!-- </v-row>
-        <v-row> -->
-      <!-- solved -->
-      <v-col cols="12" class="flex justify-center xxxs:-mt-1 xxs:-mt-5">
+
+      <v-col>
         <div
           :class="textClasses"
-          class="font-bold transition-all duration-300 text-2xl xxxs:text-xl xxs:text-xl"
+          class="font-bold transition-all duration-300 text-center text-2xl pb-2"
         >
           Solved: {{ totalPuzzless }}/{{ totalPuzzless + totalErrors }}
         </div>
       </v-col>
-      <!-- </v-row>
-    <v-row class="flex justify-evenly items-center xs:max-w-sm xs:mx-auto md:max-w-lg"> -->
-      <!-- sprint timer and restart button -->
-      <v-col cols="12" class="flex justify-center">
-        <v-row
-          class="flex justify-evenly items-center xs:max-w-sm xs:mx-auto md:max-w-lg"
-        >
-          <v-col cols="auto" class="flex justify-center xxxs:-mt-2 xxs:-mt-4">
+      <v-col>
+        <v-row class="flex justify-center items-center mx-auto md:max-w-lg">
+          <v-col
+            class="p-0 text-2xl xxs:text-xl font-bold mb-2 mx-auto xxs:mr-2"
+          >
             <v-sheet
               :elevation="17"
               :border="true"
               rounded
-              class="flex items-center px-3 bg-blue-900 text-white md:text-xl"
+              class="bg-blue-900 text-white text-center pb-[3px]"
             >
-              <span
-                class="text-xl xxxs:text-base xxs:text-base md:text-3xl mr-3 font-bold"
-                >Sprint:</span
-              >
+              <span class="font-semibold mr-2">Sprint:</span>
               <StopWatch ref="sessionClockRef" />
             </v-sheet>
           </v-col>
-          <v-col cols="auto" class="flex justify-center">
+          <v-col cols="auto" class="p-0 px-2 text-center">
             <v-btn
               plain
               size="large"
               color="#e11d48"
               rounded="xs"
-              class="bg-rose-600 hover:bg-rose-800 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:text-base xxs:text-base md:text-2xl xxxs:-mt-2 xxs:-mt-4"
+              class="bg-rose-600 hover:bg-rose-800 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:text-xl md:text-2xl xxxs:mt-1 xxs:-mt-3 -mt-2"
               @click="restartSession()"
               >Restart</v-btn
             >

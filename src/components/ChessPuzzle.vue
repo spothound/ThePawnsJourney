@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import 'vue3-chessboard/style.css'
 // @ts-ignore
-import { TheChessboard, type BoardConfig, BoardApi, type MoveEvent, MoveableColor, type DrawShape } from 'vue3-chessboard'
+import {
+  TheChessboard,
+  type BoardConfig,
+  BoardApi,
+  type MoveEvent,
+  MoveableColor,
+  type DrawShape,
+} from 'vue3-chessboard'
 import { reactive, onMounted, ref } from 'vue'
 import captureSound from '../assets/sounds/capture-sound.mp3'
 import confirmationSound from '../assets/sounds/confirmation-sound.mp3'
@@ -13,18 +20,18 @@ const emit = defineEmits(['solved', 'failure'])
 const props = defineProps({
   puzzleData: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
-
 
 // Variables
 
 let boardAPI: BoardApi | undefined
 const invalidMove = ref(false)
 
-const intervalId = setInterval(DetectFailure, 1500);
-let playerColor: MoveableColor = props.puzzleData.FEN.split(' ')[1] === 'b' ? 'white' : 'black'
+const intervalId = setInterval(DetectFailure, 1500)
+let playerColor: MoveableColor =
+  props.puzzleData.FEN.split(' ')[1] === 'b' ? 'white' : 'black'
 let pendingMoves = props.puzzleData.Moves.split(' ')
 let failures = 0
 let moves = 0
@@ -39,20 +46,20 @@ const boardConfig: BoardConfig = reactive({
 
 // Functions
 
-function solvedPuzzle () {
-  emit('solved', moves, failures);
+function solvedPuzzle() {
+  emit('solved', moves, failures)
   new Audio(confirmationSound).play()
 }
 
 function DetectFailure() {
-  if(invalidMove.value) {
+  if (invalidMove.value) {
     invalidMove.value = false
     failures++
     goBack()
   }
 }
 
-function runEnemyMove () {
+function runEnemyMove() {
   if (pendingMoves.length === 0) {
     solvedPuzzle()
     return
@@ -62,7 +69,7 @@ function runEnemyMove () {
   boardAPI?.move(nextMove)
 }
 
-function validMove (move: string): boolean {
+function validMove(move: string): boolean {
   if (pendingMoves.length === 0) {
     return false
   }
@@ -70,7 +77,7 @@ function validMove (move: string): boolean {
   return move === pendingMoves[0]
 }
 
-function handlePlayerMove (move: MoveEvent) {
+function handlePlayerMove(move: MoveEvent) {
   moves++
   if (boardAPI?.getIsCheckmate()) {
     solvedPuzzle()
@@ -86,7 +93,7 @@ function handlePlayerMove (move: MoveEvent) {
   }
 }
 
-function handleMove (move: MoveEvent) {
+function handleMove(move: MoveEvent) {
   if (move.captured) {
     new Audio(captureSound).play()
   } else {
@@ -99,7 +106,9 @@ function handleMove (move: MoveEvent) {
 
 function resizeBoard() {
   // this function find the element with class chessboard-visualization and resize it. It check if the element is present in the page and the width and height of its parent and set the width of the chessboard to the minimum between the two of them
-  const chessboard = document.getElementsByClassName('chessboard-visualization')[0] as HTMLElement
+  const chessboard = document.getElementsByClassName(
+    'chessboard-visualization',
+  )[0] as HTMLElement
   if (chessboard) {
     const main = document.getElementsByClassName('v-main')[0] as HTMLElement
     const parent = chessboard.parentElement
@@ -108,8 +117,12 @@ function resizeBoard() {
       const chessboardParentHeight = parent.clientHeight
       const mainHeight = main.clientHeight
       const mainWidth = main.clientWidth
-      chessboard.style.width = `${Math.max(chessboardParentWidth, mainHeight)}px`;
-      chessboard.style.maxWidth = `${Math.min(chessboardParentWidth, mainHeight, 900)}px`;
+      chessboard.style.width = `${chessboardParentWidth}px`
+      // chessboard.style.width = `${Math.max(
+      //   chessboardParentWidth,
+      //   mainHeight,
+      // )}px`
+      // chessboard.style.maxWidth = `${Math.min(chessboardParentWidth, mainHeight, 900)}px`;
     }
   }
 }
@@ -119,37 +132,43 @@ nextTick(() => {
 })
 
 onMounted(async () => {
-  window.addEventListener('resize', resizeBoard);
+  window.addEventListener('resize', resizeBoard)
   resizeBoard()
   runEnemyMove()
   playerColor = boardAPI?.getLastMove()?.color === 'w' ? 'black' : 'white'
 })
 
-function goBack () {
+function goBack() {
   moves--
   boardAPI?.undoLastMove()
   invalidMove.value = false
 }
 
-function clue () {
+function clue() {
   if (pendingMoves.length > 0) {
     const nextMove = pendingMoves[0]
-        boardAPI?.setShapes([
-        {
-          orig: nextMove.slice(0, 2),
-          dest: nextMove.slice(2, 4),
-          brush: 'paleGreen'
-        },
-      ])
-    }
+    boardAPI?.setShapes([
+      {
+        orig: nextMove.slice(0, 2),
+        dest: nextMove.slice(2, 4),
+        brush: 'paleGreen',
+      },
+    ])
+  }
 }
 
-defineExpose({ clue });
-
+defineExpose({ clue })
 </script>
 
 <template>
-  <TheChessboard class="chessboard-visualization" @move="handleMove" @board-created="(api: any) => (boardAPI = api)" :player-color="playerColor" :board-config="boardConfig" reactive-config />
+  <TheChessboard
+    class="chessboard-visualization w-full"
+    @move="handleMove"
+    @board-created="(api: any) => (boardAPI = api)"
+    :player-color="playerColor"
+    :board-config="boardConfig"
+    reactive-config
+  />
 </template>
 
 <style scoped>
