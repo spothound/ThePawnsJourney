@@ -70,6 +70,6 @@ h6 {
 
 @media (min-width: 768px) {
   .auto-label label {
-    @apply text-3xl;
+    @apply text-4xl;
   }
 }

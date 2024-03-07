@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import 'vue3-chessboard/style.css'
 // @ts-ignore
+import type { MoveableColor } from 'vue3-chessboard'
 import {
   TheChessboard,
   type BoardConfig,
   BoardApi,
   type MoveEvent,
-  MoveableColor,
   type DrawShape,
 } from 'vue3-chessboard'
 import { reactive, onMounted, ref } from 'vue'
@@ -45,7 +45,6 @@ const boardConfig: BoardConfig = reactive({
 })
 
 // Functions
-
 function solvedPuzzle() {
   emit('solved', moves, failures)
   new Audio(confirmationSound).play()
@@ -114,9 +113,9 @@ function resizeBoard() {
     const parent = chessboard.parentElement
     if (main && parent) {
       const chessboardParentWidth = parent.clientWidth
-      const chessboardParentHeight = parent.clientHeight
-      const mainHeight = main.clientHeight
-      const mainWidth = main.clientWidth
+      // const chessboardParentHeight = parent.clientHeight
+      // const mainHeight = main.clientHeight
+      // const mainWidth = main.clientWidth
       chessboard.style.width = `${chessboardParentWidth}px`
       // chessboard.style.width = `${Math.max(
       //   chessboardParentWidth,
@@ -162,7 +161,7 @@ defineExpose({ clue })
 
 <template>
   <TheChessboard
-    class="chessboard-visualization w-full"
+    class="chessboard-visualization"
     @move="handleMove"
     @board-created="(api: any) => (boardAPI = api)"
     :player-color="playerColor"

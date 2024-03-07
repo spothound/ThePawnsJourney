@@ -162,8 +162,11 @@ function sendClue() {
 <template>
   <v-container fluid class="overflow-hidden">
     <!-- puzzle timer -->
-    <v-row class="grid">
-      <v-col class="p-0 text-2xl xxxs:text-xl font-bold mb-2 mx-auto w-11/12">
+    <v-row class="grid training-board">
+      <v-col
+        class="p-0 text-2xl xxxs:text-xl md:text-3xl font-bold mb-2 md:mb-5 mx-auto w-11/12 md:max-w-sm"
+        order-lg="2"
+      >
         <v-sheet
           :elevation="17"
           :border="true"
@@ -175,7 +178,10 @@ function sendClue() {
         </v-sheet>
       </v-col>
       <!-- board -->
-      <v-col class="p-0 mb-3 xxxs:mb-2 md:w-full">
+      <v-col
+        class="p-0 mb-3 xxxs:mb-2 md:w-full lg:landscape:max-w-lg"
+        order-lg="1"
+      >
         <ChessPuzzle
           ref="puzzleRef"
           :key="(puzzleColection[currentPuzzle] as any).PuzzleId"
@@ -198,7 +204,7 @@ function sendClue() {
               plain
               append-icon="mdi-lightbulb-alert-outline"
               :disabled="!allowClue"
-              class="bg-blue-500 hover:bg-blue-700 text-white text-xl xxs:text-base md:text-2xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              class="bg-blue-500 hover:bg-blue-700 text-white text-xl xxs:text-base md:text-3xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
               @click="sendClue()"
               >Hint</v-btn
             >
@@ -222,7 +228,7 @@ function sendClue() {
               plain
               append-icon="mdi-skip-next-outline"
               :disabled="!solved"
-              class="bg-emerald-500 hover:bg-emerald-700 text-white text-xl xxs:text-base font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:-mt-4"
+              class="bg-emerald-500 hover:bg-emerald-700 text-white text-xl xxs:text-base md:text-3xl font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:-mt-4"
               @click="nextPuzzle()"
               >Next</v-btn
             >
@@ -233,7 +239,7 @@ function sendClue() {
       <v-col>
         <div
           :class="textClasses"
-          class="font-bold transition-all duration-300 text-center text-2xl pb-2"
+          class="font-bold transition-all duration-300 text-center text-2xl md:text-3xl pb-2"
         >
           Solved: {{ totalPuzzless }}/{{ totalPuzzless + totalErrors }}
         </div>
@@ -241,7 +247,7 @@ function sendClue() {
       <v-col>
         <v-row class="flex justify-center items-center mx-auto md:max-w-lg">
           <v-col
-            class="p-0 text-2xl xxs:text-xl font-bold mb-2 mx-auto xxs:mr-2"
+            class="p-0 text-2xl xxs:text-xl md:text-3xl font-bold mb-2 mx-auto xxs:mr-2"
           >
             <v-sheet
               :elevation="17"
@@ -259,7 +265,7 @@ function sendClue() {
               size="large"
               color="#e11d48"
               rounded="xs"
-              class="bg-rose-600 hover:bg-rose-800 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:text-xl md:text-2xl xxxs:mt-1 xxs:-mt-3 -mt-2"
+              class="bg-rose-600 hover:bg-rose-800 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:text-xl md:text-3xl xxxs:mt-1 xxs:-mt-3 -mt-2"
               @click="restartSession()"
               >Restart</v-btn
             >
