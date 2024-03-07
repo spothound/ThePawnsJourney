@@ -96,11 +96,11 @@ function handlePlayerMove (move: MoveEvent) {
   }
   if (validMove(move.lan)) {
     pendingMoves = pendingMoves.slice(1)
-    if(!move.hasOwnProperty('promotion'))
+    if('promotion' in move)
     {
-      runEnemyMove()
-    } else {
       setTimeout(runEnemyMove, 200);
+    } else {
+      runEnemyMove()
     }
   } else {
     invalidMove.value = true
