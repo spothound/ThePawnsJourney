@@ -103,25 +103,17 @@ function handleMove(move: MoveEvent) {
   }
 }
 
+// this function find the element with class chessboard-visualization and resize it.
+// It check if the element is present in the page and if it has a parent element,
+// then it set the width of the chessboard to the width of the parent element.
 function resizeBoard() {
-  // this function find the element with class chessboard-visualization and resize it. It check if the element is present in the page and the width and height of its parent and set the width of the chessboard to the minimum between the two of them
-  const chessboard = document.getElementsByClassName(
-    'chessboard-visualization',
-  )[0] as HTMLElement
+  const chessboard = document.querySelector(
+    '.chessboard-visualization',
+  ) as HTMLElement
   if (chessboard) {
-    const main = document.getElementsByClassName('v-main')[0] as HTMLElement
     const parent = chessboard.parentElement
-    if (main && parent) {
-      const chessboardParentWidth = parent.clientWidth
-      // const chessboardParentHeight = parent.clientHeight
-      // const mainHeight = main.clientHeight
-      // const mainWidth = main.clientWidth
-      chessboard.style.width = `${chessboardParentWidth}px`
-      // chessboard.style.width = `${Math.max(
-      //   chessboardParentWidth,
-      //   mainHeight,
-      // )}px`
-      // chessboard.style.maxWidth = `${Math.min(chessboardParentWidth, mainHeight, 900)}px`;
+    if (parent) {
+      chessboard.style.width = `${parent.clientWidth}px`
     }
   }
 }
@@ -162,17 +154,17 @@ defineExpose({ clue })
 <template>
   <TheChessboard
     class="chessboard-visualization"
-    @move="handleMove"
-    @board-created="(api: any) => (boardAPI = api)"
     :player-color="playerColor"
     :board-config="boardConfig"
     reactive-config
+    @move="handleMove"
+    @board-created="(api: any) => (boardAPI = api)"
   />
 </template>
 
 <style scoped>
-.chessboard-visualization {
+/* .chessboard-visualization {
   margin: 0px;
   width: 200px;
-}
+} */
 </style>
