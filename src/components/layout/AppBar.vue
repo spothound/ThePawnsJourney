@@ -29,13 +29,27 @@ watchEffect(() => {
   // Verificar si el dispositivo es táctil
   showNavIcon.value = 'ontouchstart' in window
 })
+const iconSize = computed(() => {
+  if (window.innerWidth < 600) {
+    return 30
+  } else if (window.innerWidth >= 600 && window.innerWidth < 960) {
+    return 40
+  } else {
+    return 50
+  }
+})
 </script>
 
 <template>
   <v-app-bar flat>
     <v-app-bar-nav-icon v-if="showNavIcon" @click="drawer = !drawer" />
     <!-- <v-breadcrumbs :items="breadcrumbs"> </v-breadcrumbs> -->
-    <h1 class="text-h6 font-weight-bold"><v-icon size="30" icon="custom:logo-3-pj"></v-icon> The Pawn's Journey</h1>
+    <h1
+      class="flex items-center text-h6 xxxs:text-lg xxs:text-lg md:text-3xl font-weight-bold"
+    >
+      <v-icon :size="iconSize" icon="custom:logo-3-pj" class="me-2"></v-icon>
+      The Pawn's Journey
+    </h1>
     <v-spacer />
     <!-- Add an h1 element with logo an title -->
     <div id="app-bar"></div>
