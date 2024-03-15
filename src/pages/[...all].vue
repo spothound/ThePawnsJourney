@@ -2,24 +2,19 @@
 export default defineComponent({
   name: 'ErrorPage',
 })
+import { ref } from 'vue'
+
+const icon = ref(['mdi-book-search'])
 </script>
 
 <template>
-  <div class="wrapper">
-    <v-icon class="logo mb-4" icon="custom:logo-3-pj" />
-    <p class="text-h5">404 Not Found</p>
+  <div class="text-center mt-5">
+    <v-icon class="text-9xl mb-4 opacity-60" icon="custom:logo-3-pj" />
+    <v-icon class="text-9xl mb-4 opacity-50 text-green-600"
+      >mdi-book-search</v-icon
+    >
+    <p class="xxxs:text-4xl text-8xl font-kanit text-red-800 opacity-90">
+      404 Not Found
+    </p>
   </div>
 </template>
-
-<style scoped>
-.wrapper {
-  position: relative;
-  top: calc(50vh - 250px);
-  text-align: center;
-  opacity: 0.6;
-}
-.logo {
-  font-size: 12em;
-  opacity: 0.2;
-}
-</style>
