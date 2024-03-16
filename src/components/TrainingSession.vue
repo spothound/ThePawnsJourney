@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import ChessPuzzle from './ChessPuzzle.vue'
+const router = useRouter();
 import { ref, computed } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
+import Puzzle from './ChessPuzzle.vue'
 
-const props = defineProps({
-  level: {
-    type: Number,
-    required: true,
-  },
-  puzzleColection: {
-    type: Array,
-    required: true,
-  },
-})
+const puzzleColection = JSON.parse(localStorage.getItem('puzzleColection') as string);
 
 const auto = ref(false)
 const totalErrors = ref(0)
@@ -21,12 +12,10 @@ const allowClue = ref(false)
 const errorOccurred = ref(false)
 const successOccurred = ref(false)
 const totalPuzzless = ref(0)
-const maxIndex = props.puzzleColection.length - 1
-const puzzleRankings = new Array(maxIndex).fill(-1)
 const solved = ref(false)
 const puzzleRef = ref()
 const requiredTime = ref(0)
-const currentPuzzle = ref()
+const currentPuzzle = ref(0)
 const puzzleClockRef = ref({
   stop: () => {
     return 0
@@ -48,16 +37,7 @@ function nextPuzzle() {
   allowClue.value = false
   currentErrors.value = 0
   puzzleClockRef.value.restart()
-  // get an array of indices where puzzleRankings equals -1
-  const unplayedPuzzles = puzzleRankings
-    .map((ranking, index) => (ranking === -1 ? index : -1))
-    .filter((index) => index !== -1)
-  // if there are no unplayed puzzles, do nothing
-  if (unplayedPuzzles.length === 0)
-    Math.floor(Math.random() * puzzleRankings.length)
-  // get a random index from unplayedPuzzles
-  const randomIndex = Math.floor(Math.random() * unplayedPuzzles.length)
-  currentPuzzle.value = unplayedPuzzles[randomIndex]
+  currentPuzzle.value = currentPuzzle.value + 1
 }
 
 nextPuzzle()
@@ -81,18 +61,6 @@ const textClasses = computed(() => {
   }
 })
 
-function calculateRank(timeElapsed: number, moves: number, failures: number) {
-  let rank = 0
-  const averageTime = timeElapsed / moves
-  if (failures > 1) rank = 0
-  else if (failures == 1) rank = 1
-  else if (averageTime < 3500) rank = 5
-  else if (averageTime < 7000) rank = 4
-  else if (averageTime < 10000) rank = 3
-  else rank = 2
-  return rank
-}
-
 function handleFailure() {
   if (currentErrors.value == 0) {
     totalErrors.value++
@@ -110,26 +78,12 @@ function puzzleSolved(moves: number, failures: number) {
   solved.value = true
   const timeElapsed = puzzleClockRef.value ? puzzleClockRef.value.stop() : 0
   requiredTime.value = timeElapsed
-  puzzleRankings[currentPuzzle.value] = calculateRank(
-    timeElapsed,
-    moves,
-    failures,
-  )
-  localStorage.setItem(
-    `puzzleRankings_${props.level}`,
-    JSON.stringify(puzzleRankings),
-  )
   if (auto.value) nextPuzzle()
 }
 
 function restartSession() {
   totalErrors.value = 0
   totalPuzzless.value = 0
-  puzzleRankings.fill(-1)
-  localStorage.setItem(
-    `puzzleRankings_${props.level}`,
-    JSON.stringify(puzzleRankings),
-  )
   sessionClockRef.value.restart()
   nextPuzzle()
 }
@@ -165,14 +119,23 @@ function sendClue() {
         class="p-0 mb-3 xxxs:mb-2 md:w-full lg:landscape:max-w-[85vh] 2xl:landscape:max-w-[90vh]"
         order-md="0"
       >
-        <ChessPuzzle
-          ref="puzzleRef"
-          :key="(puzzleColection[currentPuzzle] as any).PuzzleId"
-          :puzzle-data="puzzleColection[currentPuzzle] as Record<string, any>"
-          @failure="handleFailure"
-          @solved="puzzleSolved"
-        >
-        </ChessPuzzle>
+      <Suspense>
+          <template #default>
+            <ChessPuzzle
+              :key="(puzzleColection[currentPuzzle] as any).PuzzleId"
+              ref="puzzleRef"
+              @failure="handleFailure"
+              @solved="puzzleSolved"
+              :puzzleId="puzzleColection[currentPuzzle]['PuzzleId']"
+            />
+          </template>
+          <template #fallback>
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </template>
+        </Suspense>
       </v-col>
       <v-col id="puzzle-actions-container" class="p-0 v-center" order-md="2">
         <!-- actions -->
