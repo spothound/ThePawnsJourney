@@ -5,7 +5,7 @@ const notificationsShown = computed(() =>
   notifications.value.filter((notification) => notification.show).reverse(),
 )
 const showAll = ref(false)
-const timeout = ref(5000)
+const timeout = ref<number>(5000);
 function deleteNotification(id: number) {
   notificationStore.delNotification(id)
 }
@@ -18,9 +18,9 @@ function toggleAll() {
     m.show = showAll.value
   })
   if (showAll.value) {
-    timeout.value = -1
+    timeout.value = -1 as number
   } else {
-    timeout.value = 5000
+    timeout.value = 5000 as number
   }
 }
 </script>

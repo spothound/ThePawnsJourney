@@ -20,13 +20,13 @@ const stop = () => {
 
 const restart = () => {
   startTime.value = Date.now()
-  timer = setInterval(updateTime, 1)
+  timer = setInterval(updateTime, 1) as unknown as number;
 }
 
 defineExpose({ stop, restart })
 
 onMounted(() => {
-  timer = setInterval(updateTime, 1)
+  timer = setInterval(updateTime, 1) as unknown as number;
 })
 
 onBeforeUnmount(() => {
