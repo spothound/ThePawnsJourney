@@ -24,7 +24,7 @@ const startTimeout = () => {
 
   activeTimeout = setTimeout(() => {
     isActive.value = false
-  }, timeout.value)
+  }, timeout.value) as unknown as number
 }
 watch([isActive, timeout], startTimeout)
 if (isActive.value) {
