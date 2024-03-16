@@ -8,6 +8,7 @@ import captureSound from '../assets/sounds/capture-sound.mp3'
 import confirmationSound from '../assets/sounds/confirmation-sound.mp3'
 import errorSound from '../assets/sounds/error-sound.mp3'
 import moveSound from '../assets/sounds/move-sound.mp3'
+import type { Key } from 'chessground/types';
 
 // Parent-child communication
 const emit = defineEmits(['solved', 'failure'])
@@ -154,8 +155,8 @@ function clue() {
     const nextMove = pendingMoves[0]
     boardAPI?.setShapes([
       {
-        orig: nextMove.slice(0, 2),
-        dest: nextMove.slice(2, 4),
+        orig: nextMove.slice(0, 2) as Key,
+        dest: nextMove.slice(2, 4) as Key,
         brush: 'paleGreen',
       },
     ])
