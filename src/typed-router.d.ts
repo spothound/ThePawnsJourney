@@ -46,13 +46,8 @@ declare module 'vue-router/auto/routes' {
     '/nested/menu2': RouteRecordInfo<'/nested/menu2', '/nested/menu2', Record<never, never>, Record<never, never>>,
     '/nested/menu2/menu2-1': RouteRecordInfo<'/nested/menu2/menu2-1', '/nested/menu2/menu2-1', Record<never, never>, Record<never, never>>,
     '/nested/menu2/menu2-2': RouteRecordInfo<'/nested/menu2/menu2-2', '/nested/menu2/menu2-2', Record<never, never>, Record<never, never>>,
+    '/puzzles_for_stockfish': RouteRecordInfo<'/puzzles_for_stockfish', '/puzzles_for_stockfish', Record<never, never>, Record<never, never>>,
     '/training_0_500': RouteRecordInfo<'/training_0_500', '/training_0_500', Record<never, never>, Record<never, never>>,
-    '/training_1000_1500': RouteRecordInfo<'/training_1000_1500', '/training_1000_1500', Record<never, never>, Record<never, never>>,
-    '/training_1500_2000': RouteRecordInfo<'/training_1500_2000', '/training_1500_2000', Record<never, never>, Record<never, never>>,
-    '/training_2000_2500': RouteRecordInfo<'/training_2000_2500', '/training_2000_2500', Record<never, never>, Record<never, never>>,
-    '/training_2500_3000': RouteRecordInfo<'/training_2500_3000', '/training_2500_3000', Record<never, never>, Record<never, never>>,
-    '/training_3000_3500': RouteRecordInfo<'/training_3000_3500', '/training_3000_3500', Record<never, never>, Record<never, never>>,
-    '/training_500_1000': RouteRecordInfo<'/training_500_1000', '/training_500_1000', Record<never, never>, Record<never, never>>,
   }
 }
 
