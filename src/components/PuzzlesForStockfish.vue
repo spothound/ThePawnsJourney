@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { defineProps } from 'vue'
 import VueBoard from './VueBoard.vue'
 import { ref, computed } from 'vue'
 
@@ -13,19 +14,22 @@ const props = defineProps({
   },
 })
 
+const squareIcon = ref(['mdi-circle'])
+
 const auto = ref(true) // auto start next puzzle
 const totalErrors = ref(0)
 const currentErrors = ref(0)
 const allowClue = ref(false) // it allows the user to ask for a hint
 const errorOccurred = ref(false)
 const successOccurred = ref(false)
-const totalPuzzless = ref(0) 
+const totalPuzzless = ref(0)
 const maxIndex = props.puzzleColection.length - 1 // possition of the last available puzzle
 const puzzleRankings = new Array(maxIndex).fill(-1)
 const solved = ref(false)
 const puzzleRef = ref()
 const requiredTime = ref(0)
 const currentPuzzle = ref()
+const whiteToMove = ref(true)
 const puzzleClockRef = ref({
   stop: () => {
     return 0
@@ -57,6 +61,11 @@ function nextPuzzle() {
   // get a random index from unplayedPuzzles
   const randomIndex = Math.floor(Math.random() * unplayedPuzzles.length)
   currentPuzzle.value = unplayedPuzzles[randomIndex]
+
+  whiteToMove.value =
+    (props.puzzleColection[currentPuzzle.value] as { FEN: string }).FEN.split(
+      ' ',
+    )[1] !== 'w'
 }
 
 nextPuzzle()
@@ -133,9 +142,13 @@ function restartSession() {
   nextPuzzle()
 }
 
-function sendClue() {
-  puzzleRef.value.clue()
+const reportPuzzle = (id) => {
+  console.log(`Report puzzle: ${id}`)
 }
+
+// function sendClue() {
+//   puzzleRef.value.clue()
+// }
 </script>
 
 <template>
@@ -166,7 +179,9 @@ function sendClue() {
       >
         <VueBoard
           ref="puzzleRef"
-          :key="(puzzleColection[currentPuzzle] as Record<string, any>).PuzzleId"
+          :key="
+            (puzzleColection[currentPuzzle] as Record<string, any>).PuzzleId
+          "
           :puzzle-data="puzzleColection[currentPuzzle] as Record<string, any>"
           @failure="handleFailure"
           @solved="puzzleSolved"
@@ -179,19 +194,21 @@ function sendClue() {
           id="puzzle-actions-row"
           class="flex justify-center items-center xxs:-mt-2 xs:max-w-md xs:mx-auto md:max-w-xl"
         >
-          <!-- <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
-            <v-btn
-              size="large"
-              rounded="xs"
-              color="#3b83f6"
-              plain
-              append-icon="mdi-lightbulb-alert-outline"
-              :disabled="!allowClue"
-              class="bg-blue-500 hover:bg-blue-700 text-white text-xl xxs:text-base md:text-3xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-              @click="sendClue()"
-              >Hint</v-btn
-            >
-          </v-col> -->
+          <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
+            <div class="flex justify-center items-center">
+              <v-icon
+                class="text-2xl mr-2 border-2 border-blue-900 rounded-md p-[2px] border-opacity-80 bg-blue-900"
+                :class="{
+                  'text-white': whiteToMove,
+                  'text-black': !whiteToMove,
+                }"
+                :icon="squareIcon"
+              />
+              <p class="xxxs:text-xl text-xl font-kanit font-bold opacity-90">
+                {{ whiteToMove ? 'White' : 'Black' }} to move
+              </p>
+            </div>
+          </v-col>
           <v-col
             cols="auto"
             class="flex justify-center px-2"
@@ -208,19 +225,18 @@ function sendClue() {
               class="switch flex justify-center auto-label"
             ></v-switch>
           </v-col>
-          <!-- <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
+          <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
             <v-btn
-              size="large"
-              rounded="xs"
-              color="#10b981"
-              plain
-              append-icon="mdi-skip-next-outline"
-              :disabled="!solved"
-              class="bg-emerald-500 hover:bg-emerald-700 text-white text-xl xxs:text-base md:text-3xl font-bold disabled:opacity-50 disabled:cursor-not-allowed xxxs:-mt-4"
-              @click="nextPuzzle()"
-              >Next</v-btn
+              color="red"
+              class="bg-rose-600 hover:bg-rose-800 text-white font-bold xxxs:text-xl md:text-3xl lg:landscape:text-2xl xxxs:mt-1 xxs:-mt-3 -mt-2"
+              @click="reportPuzzle(props.puzzleColection[currentPuzzle].PuzzleId)"
             >
-          </v-col> -->
+              Puzzle: {{ props.puzzleColection[currentPuzzle].PuzzleId }}
+              <v-tooltip activator="parent" location="top"
+                >Report this puzzle</v-tooltip
+              >
+            </v-btn>
+          </v-col>
         </v-row>
       </v-col>
 
