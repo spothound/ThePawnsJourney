@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import 'vue3-chessboard/style.css'
+import { Stockfish } from '@/engines/Stockfish'
 import { type Puzzle } from '@/types.ts'
 // @ts-ignore
 import type { MoveableColor } from 'vue3-chessboard'
@@ -27,12 +28,19 @@ const props = defineProps({
 // Variables
 
 let boardAPI: BoardApi | undefined
-const invalidMove = ref(false)
+let engine: Stockfish | undefined
 
-// const intervalId = setInterval(DetectFailure, 1500)
 // the opposite of the first move color, because the first move is made by the board
 let playerColor: MoveableColor =
   props.puzzleData.FEN.split(' ')[1] === 'b' ? 'white' : 'black'
+
+function handleBoardCreated(boardApi: BoardApi) {
+  boardAPI = boardApi
+  console.log('player color: ', playerColor)
+
+  engine = new Stockfish(boardApi, playerColor)
+}
+
 let pendingMoves = props.puzzleData.Moves.split(' ')
 let moves = 0
 const boardConfig: BoardConfig = reactive({
@@ -92,6 +100,7 @@ const boardConfig: BoardConfig = reactive({
 function solvedPuzzle() {
   emit('solved', moves)
   new Audio(confirmationSound).play()
+  // engine?.confirmNewGame(playerColor[0] === 'w' ? 'white' : 'black')
 }
 
 function runEnemyMove() {
@@ -128,7 +137,7 @@ function handlePlayerMove(move: MoveEvent) {
     pendingMoves = pendingMoves.slice(1)
     runEnemyMove()
   } else {
-    invalidMove.value = true
+    // invalidMove.value = true
     new Audio(errorSound).play()
     emit('failure')
   }
@@ -140,6 +149,32 @@ function handleMove(move: MoveEvent) {
   } else {
     new Audio(moveSound).play()
   }
+  console.log('handleMove', move)
+
+  console.log('player color: ', playerColor);
+  console.log('engine color: ', engine?.getPlayerColor());
+  
+  if (playerColor !== engine?.getPlayerColor()) {
+    engine?.setPlayerColor(playerColor)
+  }
+  
+
+  // const history = boardAPI?.getHistory(true)
+
+  // const moves = history?.map((move) => {
+  //   if (typeof move === 'object') {
+  //     return move.lan
+  //   } else {
+  //     return move
+  //   }
+  // })
+
+  // if (moves) {
+  //   console.log(moves);
+
+  // }
+  console.log(boardAPI?.getFen())
+  engine?.sendUserMove((boardAPI?.getFen() as string), move.lan)
   if (move.color === playerColor[0]) {
     handlePlayerMove(move)
   }
@@ -165,21 +200,21 @@ nextTick(() => {
 })
 
 onMounted(async () => {
+  engine?.confirmNewGame()
+  engine?.setPlayerColor(playerColor)
   window.addEventListener('resize', resizeBoard)
   resizeBoard()
   runEnemyMove()
   playerColor = boardAPI?.getLastMove()?.color === 'w' ? 'black' : 'white'
 })
-
 </script>
 
 <template>
   <TheChessboard
     class="chessboard-visualization"
-    :player-color="playerColor"
     :board-config="boardConfig"
     reactive-config
     @move="handleMove"
-    @board-created="(api: any) => (boardAPI = api)"
+    @board-created="handleBoardCreated"
   />
 </template>
