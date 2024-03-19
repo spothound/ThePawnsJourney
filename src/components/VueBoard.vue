@@ -8,7 +8,6 @@ import {
   type BoardConfig,
   BoardApi,
   type MoveEvent,
-  type DrawShape,
 } from 'vue3-chessboard'
 import { reactive, onMounted, ref } from 'vue'
 import captureSound from '../assets/sounds/capture-sound.mp3'
@@ -30,33 +29,69 @@ const props = defineProps({
 let boardAPI: BoardApi | undefined
 const invalidMove = ref(false)
 
-const intervalId = setInterval(DetectFailure, 1500)
+// const intervalId = setInterval(DetectFailure, 1500)
+// the opposite of the first move color, because the first move is made by the board
 let playerColor: MoveableColor =
   props.puzzleData.FEN.split(' ')[1] === 'b' ? 'white' : 'black'
 let pendingMoves = props.puzzleData.Moves.split(' ')
-let failures = 0
 let moves = 0
 const boardConfig: BoardConfig = reactive({
   fen: props.puzzleData.FEN,
   coordinates: true,
   viewOnly: false,
-  animation: { enabled: true },
-  draggable: { enabled: true },
+  highlight: {
+    lastMove: true, // highlight the last move on the board
+    check: true, // highlight king in check
+  },
+  animation: {
+    enabled: true,
+    duration: 200,
+  },
+  draggable: {
+    enabled: true,
+    distance: 3,
+    autoDistance: true,
+    showGhost: true,
+    deleteOnDropOff: false,
+  },
+  premovable: {
+    enabled: true,
+    showDests: true,
+    castle: true,
+    events: {},
+  },
+  selectable: {
+    enabled: true,
+  },
   orientation: playerColor,
+  brushes: {
+    green: { key: 'g', color: '#15781B', opacity: 1, lineWidth: 10 },
+    red: { key: 'r', color: '#882020', opacity: 1, lineWidth: 10 },
+    blue: { key: 'b', color: '#003088', opacity: 1, lineWidth: 10 },
+    yellow: { key: 'y', color: '#e68f00', opacity: 1, lineWidth: 10 },
+    paleBlue: { key: 'pb', color: '#003088', opacity: 0.4, lineWidth: 15 },
+    paleGreen: { key: 'pg', color: '#15781B', opacity: 0.4, lineWidth: 15 },
+    paleRed: { key: 'pr', color: '#882020', opacity: 0.4, lineWidth: 15 },
+    paleGrey: {
+      key: 'pgr',
+      color: '#4a4a4a',
+      opacity: 0.35,
+      lineWidth: 15,
+    },
+  },
+  events: {
+    move: (from, to, capture) => {
+      // the move function fires after each move on the board, you can access the values from, to, and capture
+      // use @move event to access values from the board api. The move function is executed before the state is updated in the board.
+      console.log(from, to, capture)
+    },
+  },
 })
 
 // Functions
 function solvedPuzzle() {
-  emit('solved', moves, failures)
+  emit('solved', moves)
   new Audio(confirmationSound).play()
-}
-
-function DetectFailure() {
-  if (invalidMove.value) {
-    invalidMove.value = false
-    failures++
-    goBack()
-  }
 }
 
 function runEnemyMove() {
@@ -79,7 +114,13 @@ function validMove(move: string): boolean {
 
 function handlePlayerMove(move: MoveEvent) {
   moves++
-  if (boardAPI?.getIsCheckmate()) {
+  if (
+    boardAPI?.getIsCheckmate() ||
+    boardAPI?.getIsStalemate() ||
+    boardAPI?.getIsInsufficientMaterial() ||
+    boardAPI?.getIsDraw() ||
+    boardAPI?.getIsThreefoldRepetition()
+  ) {
     solvedPuzzle()
     return true
   }
@@ -130,26 +171,6 @@ onMounted(async () => {
   playerColor = boardAPI?.getLastMove()?.color === 'w' ? 'black' : 'white'
 })
 
-function goBack() {
-  moves--
-  boardAPI?.undoLastMove()
-  invalidMove.value = false
-}
-
-function clue() {
-  if (pendingMoves.length > 0) {
-    const nextMove = pendingMoves[0]
-    boardAPI?.setShapes([
-      {
-        orig: nextMove.slice(0, 2),
-        dest: nextMove.slice(2, 4),
-        brush: 'paleGreen',
-      },
-    ])
-  }
-}
-
-defineExpose({ clue })
 </script>
 
 <template>
@@ -162,10 +183,3 @@ defineExpose({ clue })
     @board-created="(api: any) => (boardAPI = api)"
   />
 </template>
-
-<style scoped>
-/* .chessboard-visualization {
-  margin: 0px;
-  width: 200px;
-} */
-</style>
