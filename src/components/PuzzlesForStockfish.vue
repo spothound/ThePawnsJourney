@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
 import VueBoard from './VueBoard.vue'
 import { ref, computed } from 'vue'
+import { type Puzzle } from '@/types.ts'
 
 const props = defineProps({
   chunk: {
@@ -9,7 +9,7 @@ const props = defineProps({
     required: true,
   },
   puzzleColection: {
-    type: Array,
+    type: Array as () => Puzzle[],
     required: true,
   },
 })
@@ -18,17 +18,13 @@ const squareIcon = ref(['mdi-circle'])
 
 const auto = ref(true) // auto start next puzzle
 const totalErrors = ref(0)
-const currentErrors = ref(0)
-const allowClue = ref(false) // it allows the user to ask for a hint
-const errorOccurred = ref(false)
-const successOccurred = ref(false)
-const totalPuzzless = ref(0)
-const maxIndex = props.puzzleColection.length - 1 // possition of the last available puzzle
-const puzzleRankings = new Array(maxIndex).fill(-1)
+const currentPuzzle = ref({} as Puzzle)
+let currentPuzzleIndex = 0
+const maxIndex = props.puzzleColection.length - 1 // last available puzzle
 const solved = ref(false)
 const puzzleRef = ref()
-const requiredTime = ref(0)
-const currentPuzzle = ref()
+const totalPuzzless = ref(0)
+const alert = ref(false)
 const whiteToMove = ref(true)
 const puzzleClockRef = ref({
   stop: () => {
@@ -46,114 +42,76 @@ const sessionClockRef = ref({
     return 0
   },
 })
+// this alert will be shown when the user (or stockfish) completes all the puzzles
+const showAlert = () => {
+  alert.value = true
+}
 function nextPuzzle() {
   solved.value = false
-  allowClue.value = false
-  currentErrors.value = 0
   puzzleClockRef.value.restart()
-  // get an array of indices where puzzleRankings equals -1
-  const unplayedPuzzles = puzzleRankings
-    .map((ranking, index) => (ranking === -1 ? index : -1))
-    .filter((index) => index !== -1)
-  // if there are no unplayed puzzles, do nothing
-  if (unplayedPuzzles.length === 0)
-    Math.floor(Math.random() * puzzleRankings.length)
-  // get a random index from unplayedPuzzles
-  const randomIndex = Math.floor(Math.random() * unplayedPuzzles.length)
-  currentPuzzle.value = unplayedPuzzles[randomIndex]
-
+  currentPuzzle.value = props.puzzleColection[currentPuzzleIndex]
   whiteToMove.value =
-    (props.puzzleColection[currentPuzzle.value] as { FEN: string }).FEN.split(
-      ' ',
-    )[1] !== 'w'
-}
-
-nextPuzzle()
-
-async function showError() {
-  errorOccurred.value = true
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  errorOccurred.value = false
-}
-
-async function showSuccess() {
-  successOccurred.value = true
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  successOccurred.value = false
-}
-
-const textClasses = computed(() => {
-  return {
-    'text-lime-500': successOccurred.value,
-    'text-rose-800': errorOccurred.value,
+    (props.puzzleColection[currentPuzzleIndex] as Puzzle).FEN.split(' ')[1] !==
+    'w'
+  if (currentPuzzleIndex < maxIndex) {
+    currentPuzzleIndex++
+  } else {
+    showAlert()
   }
-})
-
-function calculateRank(timeElapsed: number, moves: number, failures: number) {
-  let rank = 0
-  const averageTime = timeElapsed / moves
-  if (failures > 1) rank = 0
-  else if (failures == 1) rank = 1
-  else if (averageTime < 3500) rank = 5
-  else if (averageTime < 7000) rank = 4
-  else if (averageTime < 10000) rank = 3
-  else rank = 2
-  return rank
 }
 
 function handleFailure() {
-  if (currentErrors.value == 0) {
-    totalErrors.value++
-    showError()
-  }
-  currentErrors.value++
-  if (currentErrors.value > 0) allowClue.value = true
+  totalErrors.value++
+  reportPuzzle((props.puzzleColection[currentPuzzleIndex] as Puzzle).PuzzleId)
   if (auto.value) nextPuzzle()
 }
 
-function puzzleSolved(moves: number, failures: number) {
-  showSuccess()
-  totalPuzzless.value++
-  currentErrors.value = 0
+function puzzleSolved() {
   solved.value = true
-  const timeElapsed = puzzleClockRef.value ? puzzleClockRef.value.stop() : 0
-  requiredTime.value = timeElapsed
-  puzzleRankings[currentPuzzle.value] = calculateRank(
-    timeElapsed,
-    moves,
-    failures,
-  )
-  localStorage.setItem(
-    `puzzleRankings_${props.chunk}`,
-    JSON.stringify(puzzleRankings),
-  )
+  totalPuzzless.value++
   if (auto.value) nextPuzzle()
 }
 
 function restartSession() {
   totalErrors.value = 0
   totalPuzzless.value = 0
-  puzzleRankings.fill(-1)
-  localStorage.setItem(
-    `puzzleRankings_${props.chunk}`,
-    JSON.stringify(puzzleRankings),
-  )
+  currentPuzzleIndex = 0
   sessionClockRef.value.restart()
   nextPuzzle()
 }
 
-const reportPuzzle = (id) => {
+const reportPuzzle = (id: string) => {
   console.log(`Report puzzle: ${id}`)
+  // save to local storage
+  localStorage.setItem(
+    `puzzleReport_${id}`,
+    JSON.stringify({
+      id,
+      chunk: props.chunk,
+      date: new Date().toISOString(),
+    }),
+  )
 }
 
-// function sendClue() {
-//   puzzleRef.value.clue()
-// }
+onBeforeMount(() => {
+  nextPuzzle()
+})
 </script>
 
 <template>
   <v-container fluid class="overflow-hidden">
     <!-- puzzle timer -->
+    <v-alert
+      v-model="alert"
+      border="start"
+      close-label="Close Alert"
+      color="deep-purple-accent-4"
+      title="Closable Alert"
+      variant="tonal"
+      closable
+    >
+      You have completed all the puzzles in this collection!
+    </v-alert>
     <v-row class="grid">
       <v-col
         id="puzzle-timer-container"
@@ -179,10 +137,8 @@ const reportPuzzle = (id) => {
       >
         <VueBoard
           ref="puzzleRef"
-          :key="
-            (puzzleColection[currentPuzzle] as Record<string, any>).PuzzleId
-          "
-          :puzzle-data="puzzleColection[currentPuzzle] as Record<string, any>"
+          :key="currentPuzzle.PuzzleId"
+          :puzzle-data="currentPuzzle"
           @failure="handleFailure"
           @solved="puzzleSolved"
         >
@@ -228,10 +184,18 @@ const reportPuzzle = (id) => {
           <v-col cols="auto" class="flex justify-center xxxs:px-2 xxs:px-0">
             <v-btn
               color="red"
-              class="bg-rose-600 hover:bg-rose-800 text-white font-bold xxxs:text-xl md:text-3xl lg:landscape:text-2xl xxxs:mt-1 xxs:-mt-3 -mt-2"
-              @click="reportPuzzle(props.puzzleColection[currentPuzzle].PuzzleId)"
+              class="bg-slate-600 hover:bg-slate-800 text-white font-bold xxxs:text-xl md:text-3xl lg:landscape:text-xl xxxs:mt-1 xxs:-mt-3 -mt-2"
+              @click="
+                reportPuzzle(
+                  (props.puzzleColection[currentPuzzleIndex] as Puzzle)
+                    .PuzzleId,
+                )
+              "
             >
-              Puzzle: {{ props.puzzleColection[currentPuzzle].PuzzleId }}
+              Puzzle:
+              {{
+                (props.puzzleColection[currentPuzzleIndex] as Puzzle).PuzzleId
+              }}
               <v-tooltip activator="parent" location="top"
                 >Report this puzzle</v-tooltip
               >
@@ -242,7 +206,6 @@ const reportPuzzle = (id) => {
 
       <v-col id="solved-counter" order-md="3" class="v-center">
         <div
-          :class="textClasses"
           class="font-bold transition-all duration-300 text-center text-2xl md:text-3xl pb-2"
         >
           Solved: {{ totalPuzzless }}/{{ totalPuzzless + totalErrors }}

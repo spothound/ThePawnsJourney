@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import 'vue3-chessboard/style.css'
+import { type Puzzle } from '@/types.ts'
 // @ts-ignore
 import type { MoveableColor } from 'vue3-chessboard'
 import {
@@ -19,7 +20,7 @@ import moveSound from '../assets/sounds/move-sound.mp3'
 const emit = defineEmits(['solved', 'failure'])
 const props = defineProps({
   puzzleData: {
-    type: Object,
+    type: Object as PropType<Puzzle>,
     required: true,
   },
 })
