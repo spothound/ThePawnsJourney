@@ -42,7 +42,7 @@ export class Stockfish {
 
   private handleEngineStdout(data: MessageEvent<unknown>) {
     const uciStringSplitted = (data.data as string).split(' ')
-
+    console.info('Stockfish message: ', data.data)
     if (uciStringSplitted[0] === 'uciok') {
       this.setOption('UCI_AnalyseMode', 'true')
       this.setOption('Analysis Contempt', 'Off')
@@ -52,7 +52,8 @@ export class Stockfish {
     }
 
     if (uciStringSplitted[0] === 'readyok') {
-      ;(this.stockfish as Worker).postMessage('go movetime 1500')
+      ;(this.stockfish as Worker).postMessage('go movetime 100')
+      ;(this.stockfish as Worker).postMessage('go depth 10')
       return
     }
 
@@ -61,10 +62,19 @@ export class Stockfish {
         this.bestMove = uciStringSplitted[1]
         if ((this.boardApi as BoardApi).getTurnColor() === this.colorToMove) {
           console.info('Stockfish best move: ', data.data)
-          ;(this.boardApi as BoardApi).move({
-            from: this.bestMove.slice(0, 2) as SquareKey,
-            to: this.bestMove.slice(2, 4) as SquareKey,
-          })
+          if (this.bestMove.length === 4 && this.bestMove !== '0000') {
+            ;(this.boardApi as BoardApi).move({
+              from: this.bestMove.slice(0, 2) as SquareKey,
+              to: this.bestMove.slice(2, 4) as SquareKey,
+            })
+          } else {
+            // include promotion for char 5
+            ;(this.boardApi as BoardApi).move({
+              from: this.bestMove.slice(0, 2) as SquareKey,
+              to: this.bestMove.slice(2, 4) as SquareKey,
+              promotion: this.bestMove[4] as 'q' | 'r' | 'b' | 'n',
+            })
+          }
         }
       }
     }
@@ -80,13 +90,12 @@ export class Stockfish {
     ;(this.stockfish as Worker).postMessage(
       `position fen ${position} moves ${move}`,
     )
-    ;(this.stockfish as Worker).postMessage('go movetime 2000')
+    ;(this.stockfish as Worker).postMessage('go movetime 100')
   }
 
   public confirmNewGame() {
-    console.info('confirmNewGame')    
+    console.info('confirmNewGame')
     ;(this.stockfish as Worker).postMessage('ucinewgame')
-    ;(this.stockfish as Worker).postMessage('go depth 10')
   }
   public setPlayerColor(playerColor: string | null = null) {
     this.colorToMove = playerColor
@@ -94,10 +103,14 @@ export class Stockfish {
   public getPlayerColor() {
     return this.colorToMove
   }
-  //   public confirmNewGame(position: string) {
-  //     ;(this.stockfish as Worker).postMessage('ucinewgame')
-  //     ;(this.stockfish as Worker).postMessage(
-  //         `position fen ${position}`,
-  //       )
-  //   }
+  public stopEngine() {
+    ;(this.stockfish as Worker).postMessage('stop')
+  }
+  public quit() {
+    ;(this.stockfish as Worker).postMessage('quit')
+  }
+  public destroy() {
+    ;(this.stockfish as Worker).terminate()
+    this.stockfish = undefined
+  }
 }

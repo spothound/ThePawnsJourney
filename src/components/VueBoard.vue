@@ -36,8 +36,6 @@ let playerColor: MoveableColor =
 
 function handleBoardCreated(boardApi: BoardApi) {
   boardAPI = boardApi
-  console.log('player color: ', playerColor)
-
   engine = new Stockfish(boardApi, playerColor)
 }
 
@@ -91,7 +89,7 @@ const boardConfig: BoardConfig = reactive({
     move: (from, to, capture) => {
       // the move function fires after each move on the board, you can access the values from, to, and capture
       // use @move event to access values from the board api. The move function is executed before the state is updated in the board.
-      console.log(from, to, capture)
+      // console.log(from, to, capture)
     },
   },
 })
@@ -149,32 +147,15 @@ function handleMove(move: MoveEvent) {
   } else {
     new Audio(moveSound).play()
   }
-  console.log('handleMove', move)
+  // console.log('handleMove', move)
+  // console.log('player color: ', playerColor);
+  // console.log('engine color: ', engine?.getPlayerColor());
 
-  console.log('player color: ', playerColor);
-  console.log('engine color: ', engine?.getPlayerColor());
-  
   if (playerColor !== engine?.getPlayerColor()) {
     engine?.setPlayerColor(playerColor)
   }
-  
-
-  // const history = boardAPI?.getHistory(true)
-
-  // const moves = history?.map((move) => {
-  //   if (typeof move === 'object') {
-  //     return move.lan
-  //   } else {
-  //     return move
-  //   }
-  // })
-
-  // if (moves) {
-  //   console.log(moves);
-
-  // }
-  console.log(boardAPI?.getFen())
-  engine?.sendUserMove((boardAPI?.getFen() as string), move.lan)
+  // console.log(boardAPI?.getFen())
+  engine?.sendUserMove(boardAPI?.getFen() as string, move.lan)
   if (move.color === playerColor[0]) {
     handlePlayerMove(move)
   }
@@ -206,6 +187,22 @@ onMounted(async () => {
   resizeBoard()
   runEnemyMove()
   playerColor = boardAPI?.getLastMove()?.color === 'w' ? 'black' : 'white'
+})
+
+const logInfo = () => {
+  console.log('boardAPI', boardAPI)
+  console.log('engine', engine)
+}
+
+onBeforeMount(() => {
+  console.log('before mount')
+})
+onBeforeUpdate(() => {
+  console.log('before update')
+})
+onBeforeUnmount(() => {
+  console.log('before unmount')
+  engine?.destroy()
 })
 </script>
 

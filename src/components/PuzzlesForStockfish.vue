@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import VueBoard from './VueBoard.vue'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { type Puzzle } from '@/types.ts'
 
 const props = defineProps({
@@ -14,8 +14,7 @@ const props = defineProps({
   },
 })
 
-const squareIcon = ref(['mdi-circle'])
-
+const squareIcon = ref(['mdi-circle']) // feedback for the user
 const auto = ref(true) // auto start next puzzle
 const totalErrors = ref(0)
 const currentPuzzle = ref({} as Puzzle)
