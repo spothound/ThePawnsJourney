@@ -9,23 +9,65 @@ export class Stockfish {
   public colorToMove: string | null = null
 
   constructor(boardApi: BoardApi, colorToMove: string | null = null) {
-    console.info('Stockfish engine initialized')
-    console.info('colorToMove: ', colorToMove)
+    // console.info('Stockfish engine initialized')
+    // console.info('colorToMove: ', colorToMove)
     this.colorToMove = colorToMove
     this.boardApi = boardApi
-    const wasmSupported =
-      typeof WebAssembly === 'object' &&
-      WebAssembly.validate(
-        Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00),
-      )
+    // const wasmSupported =
+    //   typeof WebAssembly === 'object' &&
+    //   WebAssembly.validate(
+    //     Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00),
+    //   )
 
-    this.stockfish = new Worker('stockfish.js')
+    // this.stockfish = new Worker('stockfish.js')
+    this.stockfish = new Worker('stockfish.wasm.js')
     // this.stockfish = new Worker(
-    //   wasmSupported ? 'stockfish.wasm.js' : 'stockfish.js',
+    //   this.wasmThreadsSupported() ? 'stockfish.wasm.js' : 'stockfish.js',
     // )
 
     this.setupListeners()
     ;(this.stockfish as Worker).postMessage('uci')
+  }
+  private wasmThreadsSupported() {
+    // WebAssembly 1.0
+    const source = Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00)
+    if (
+      typeof WebAssembly !== 'object' ||
+      typeof WebAssembly.validate !== 'function'
+    )
+      return false
+    if (!WebAssembly.validate(source)) return false
+
+    // SharedArrayBuffer
+    if (typeof SharedArrayBuffer !== 'function') return false
+
+    // Atomics
+    if (typeof Atomics !== 'object') return false
+
+    // Shared memory
+    const mem = new WebAssembly.Memory({
+      shared: true,
+      initial: 8,
+      maximum: 16,
+    })
+    if (!(mem.buffer instanceof SharedArrayBuffer)) return false
+
+    // Structured cloning
+    try {
+      // You have to make sure nobody cares about these messages!
+      window.postMessage(mem, '*')
+    } catch (e) {
+      return false
+    }
+
+    // Growable shared memory (optional)
+    try {
+      mem.grow(8)
+    } catch (e) {
+      return false
+    }
+
+    return true
   }
 
   private setupListeners(): void {
@@ -42,7 +84,7 @@ export class Stockfish {
 
   private handleEngineStdout(data: MessageEvent<unknown>) {
     const uciStringSplitted = (data.data as string).split(' ')
-    console.info('Stockfish message: ', data.data)
+    // console.info('Stockfish message: ', data.data)
     if (uciStringSplitted[0] === 'uciok') {
       this.setOption('UCI_AnalyseMode', 'true')
       this.setOption('Analysis Contempt', 'Off')
@@ -52,8 +94,8 @@ export class Stockfish {
     }
 
     if (uciStringSplitted[0] === 'readyok') {
-      ;(this.stockfish as Worker).postMessage('go movetime 100')
-      ;(this.stockfish as Worker).postMessage('go depth 10')
+      // ;(this.stockfish as Worker).postMessage('go depth 20')
+      ;(this.stockfish as Worker).postMessage('go movetime 2000')
       return
     }
 
@@ -61,13 +103,13 @@ export class Stockfish {
       if (uciStringSplitted[1] !== this.bestMove) {
         this.bestMove = uciStringSplitted[1]
         if ((this.boardApi as BoardApi).getTurnColor() === this.colorToMove) {
-          console.info('Stockfish best move: ', data.data)
+          // console.info('Stockfish best move: ', data.data)
           if (this.bestMove.length === 4 && this.bestMove !== '0000') {
             ;(this.boardApi as BoardApi).move({
               from: this.bestMove.slice(0, 2) as SquareKey,
               to: this.bestMove.slice(2, 4) as SquareKey,
             })
-          } else {
+          } else if (this.bestMove.length === 5) {
             // include promotion for char 5
             ;(this.boardApi as BoardApi).move({
               from: this.bestMove.slice(0, 2) as SquareKey,
@@ -90,11 +132,12 @@ export class Stockfish {
     ;(this.stockfish as Worker).postMessage(
       `position fen ${position} moves ${move}`,
     )
-    ;(this.stockfish as Worker).postMessage('go movetime 100')
+    // ;(this.stockfish as Worker).postMessage('go depth 20')
+    ;(this.stockfish as Worker).postMessage('go movetime 2000')
   }
 
   public confirmNewGame() {
-    console.info('confirmNewGame')
+    // console.info('confirmNewGame')
     ;(this.stockfish as Worker).postMessage('ucinewgame')
   }
   public setPlayerColor(playerColor: string | null = null) {

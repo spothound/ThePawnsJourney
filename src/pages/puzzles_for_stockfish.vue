@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PuzzlesForStockfish from '@/components/PuzzlesForStockfish.vue';
-import data from '../puzzles/puzzles_1.json'
+import data from '../puzzles/puzzles_3.json'
 definePage({
   meta: {
     icon: 'mdi-fish',
@@ -12,6 +12,6 @@ definePage({
 
 <template>
   <div class="wrapper w-full">
-    <PuzzlesForStockfish :puzzle-colection="data" :chunk="1" />
+    <PuzzlesForStockfish :puzzle-colection="data" :chunk="3" />
   </div>
 </template>

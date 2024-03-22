@@ -18,7 +18,7 @@ const squareIcon = ref(['mdi-circle']) // feedback for the user
 const auto = ref(true) // auto start next puzzle
 const totalErrors = ref(0)
 const currentPuzzle = ref({} as Puzzle)
-let currentPuzzleIndex = 0
+const currentPuzzleIndex = ref(0)
 const maxIndex = props.puzzleColection.length - 1 // last available puzzle
 const solved = ref(false)
 const puzzleRef = ref()
@@ -48,20 +48,25 @@ const showAlert = () => {
 function nextPuzzle() {
   solved.value = false
   puzzleClockRef.value.restart()
-  currentPuzzle.value = props.puzzleColection[currentPuzzleIndex]
+  currentPuzzle.value = props.puzzleColection[currentPuzzleIndex.value]
   whiteToMove.value =
-    (props.puzzleColection[currentPuzzleIndex] as Puzzle).FEN.split(' ')[1] !==
-    'w'
-  if (currentPuzzleIndex < maxIndex) {
-    currentPuzzleIndex++
+    (props.puzzleColection[currentPuzzleIndex.value] as Puzzle).FEN.split(
+      ' ',
+    )[1] !== 'w'
+  if (currentPuzzleIndex.value < maxIndex) {
+    currentPuzzleIndex.value++
   } else {
     showAlert()
   }
 }
 
-function handleFailure() {
+function handleFailure(history: string[], originalExpectedMoves: string[]) {
   totalErrors.value++
-  reportPuzzle((props.puzzleColection[currentPuzzleIndex] as Puzzle).PuzzleId)
+  reportPuzzle(
+    currentPuzzle.value.PuzzleId,
+    history,
+    originalExpectedMoves,
+  )
   if (auto.value) nextPuzzle()
 }
 
@@ -74,20 +79,33 @@ function puzzleSolved() {
 function restartSession() {
   totalErrors.value = 0
   totalPuzzless.value = 0
-  currentPuzzleIndex = 0
+  currentPuzzleIndex.value = 0
   sessionClockRef.value.restart()
   nextPuzzle()
 }
 
-const reportPuzzle = (id: string) => {
+const reportPuzzle = (
+  id: string,
+  history: string[] = [],
+  expectedMoves: string[] = [],
+) => {
   console.log(`Report puzzle: ${id}`)
+  console.log(`History: ${history}`)
+  console.log(`Expected moves: ${expectedMoves}`)
+
   // save to local storage
   localStorage.setItem(
     `puzzleReport_${id}`,
     JSON.stringify({
       id,
       chunk: props.chunk,
-      date: new Date().toISOString(),
+      date:
+        new Date().toLocaleDateString() +
+        ' - ' +
+        new Date().toLocaleTimeString(),
+      history,
+      expectedMoves,
+      puzzleIndex: currentPuzzleIndex.value,
     }),
   )
 }
@@ -99,7 +117,6 @@ onBeforeMount(() => {
 
 <template>
   <v-container fluid class="overflow-hidden">
-    <!-- puzzle timer -->
     <v-alert
       v-model="alert"
       border="start"
@@ -108,10 +125,12 @@ onBeforeMount(() => {
       title="Closable Alert"
       variant="tonal"
       closable
+      class="max-w-screen-md my-4 mx-auto p-3"
     >
       You have completed all the puzzles in this collection!
     </v-alert>
     <v-row class="grid">
+      <!-- puzzle timer -->
       <v-col
         id="puzzle-timer-container"
         cols="auto"
@@ -184,16 +203,13 @@ onBeforeMount(() => {
             <v-btn
               color="red"
               class="bg-slate-600 hover:bg-slate-800 text-white font-bold xxxs:text-xl md:text-3xl lg:landscape:text-xl xxxs:mt-1 xxs:-mt-3 -mt-2"
-              @click="
-                reportPuzzle(
-                  (props.puzzleColection[currentPuzzleIndex] as Puzzle)
-                    .PuzzleId,
-                )
-              "
+              @click="reportPuzzle(currentPuzzle.PuzzleId)"
             >
               Puzzle:
               {{
-                (props.puzzleColection[currentPuzzleIndex] as Puzzle).PuzzleId
+                currentPuzzle.PuzzleId
+                  ? currentPuzzle.PuzzleId
+                  : 'No puzzle selected'
               }}
               <v-tooltip activator="parent" location="top"
                 >Report this puzzle</v-tooltip

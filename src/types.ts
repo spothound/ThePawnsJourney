@@ -10,3 +10,4 @@ export type Puzzle = {
   GameUrl: string
   OpeningTags: string
 }
+export type TurnColor = 'w' | 'b'

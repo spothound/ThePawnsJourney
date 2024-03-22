@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import 'vue3-chessboard/style.css'
+import type { Puzzle, TurnColor } from '@/types.ts'
+import { shortToLongColor } from '@/helper.ts'
+import type { MoveableColor, BoardConfig, MoveEvent } from 'vue3-chessboard'
 import { Stockfish } from '@/engines/Stockfish'
-import { type Puzzle } from '@/types.ts'
-// @ts-ignore
-import type { MoveableColor } from 'vue3-chessboard'
-import {
-  TheChessboard,
-  type BoardConfig,
-  BoardApi,
-  type MoveEvent,
-} from 'vue3-chessboard'
+import 'vue3-chessboard/style.css'
+import { TheChessboard, BoardApi } from 'vue3-chessboard'
 import { reactive, onMounted, ref } from 'vue'
-import captureSound from '../assets/sounds/capture-sound.mp3'
-import confirmationSound from '../assets/sounds/confirmation-sound.mp3'
+// import captureSound from '../assets/sounds/capture-sound.mp3'
+// import confirmationSound from '../assets/sounds/confirmation-sound.mp3'
 import errorSound from '../assets/sounds/error-sound.mp3'
-import moveSound from '../assets/sounds/move-sound.mp3'
+// import moveSound from '../assets/sounds/move-sound.mp3'
 
 // Parent-child communication
 const emit = defineEmits(['solved', 'failure'])
@@ -26,21 +21,31 @@ const props = defineProps({
 })
 
 // Variables
-
 let boardAPI: BoardApi | undefined
 let engine: Stockfish | undefined
-
+const originalExpectedMoves = props.puzzleData.Moves.split(' ')
+const enemyColor: TurnColor = props.puzzleData.FEN.split(' ')[1] as TurnColor
+const playerColor: TurnColor = enemyColor === 'w' ? 'b' : 'w'
 // the opposite of the first move color, because the first move is made by the board
-let playerColor: MoveableColor =
-  props.puzzleData.FEN.split(' ')[1] === 'b' ? 'white' : 'black'
+const fullPlayerColor = shortToLongColor(playerColor)
+
+// function to get odd moves from the array
+function getOddMoves(moves: string[]): string[] {
+  return moves.filter((_, index) => index % 2 === 0)
+}
+// function to get even moves from the array
+function getEvenMoves(moves: string[]): string[] {
+  return moves.filter((_, index) => index % 2 !== 0)
+}
+
+const pendingEnemyMoves = getOddMoves(originalExpectedMoves)
+const pendingPlayerMoves = getEvenMoves(originalExpectedMoves)
 
 function handleBoardCreated(boardApi: BoardApi) {
   boardAPI = boardApi
-  engine = new Stockfish(boardApi, playerColor)
+  engine = new Stockfish(boardApi, fullPlayerColor)
 }
 
-let pendingMoves = props.puzzleData.Moves.split(' ')
-let moves = 0
 const boardConfig: BoardConfig = reactive({
   fen: props.puzzleData.FEN,
   coordinates: true,
@@ -69,7 +74,7 @@ const boardConfig: BoardConfig = reactive({
   selectable: {
     enabled: true,
   },
-  orientation: playerColor,
+  orientation: fullPlayerColor,
   brushes: {
     green: { key: 'g', color: '#15781B', opacity: 1, lineWidth: 10 },
     red: { key: 'r', color: '#882020', opacity: 1, lineWidth: 10 },
@@ -85,85 +90,58 @@ const boardConfig: BoardConfig = reactive({
       lineWidth: 15,
     },
   },
-  events: {
-    move: (from, to, capture) => {
-      // the move function fires after each move on the board, you can access the values from, to, and capture
-      // use @move event to access values from the board api. The move function is executed before the state is updated in the board.
-      // console.log(from, to, capture)
-    },
-  },
 })
 
-// Functions
-function solvedPuzzle() {
-  emit('solved', moves)
-  new Audio(confirmationSound).play()
-  // engine?.confirmNewGame(playerColor[0] === 'w' ? 'white' : 'black')
-}
-
 function runEnemyMove() {
-  if (pendingMoves.length === 0) {
-    solvedPuzzle()
-    return
-  }
-  const nextMove = pendingMoves[0]
-  pendingMoves = pendingMoves.slice(1)
+  const nextMove = pendingEnemyMoves.shift() as string
   boardAPI?.move(nextMove)
 }
 
-function validMove(move: string): boolean {
-  if (pendingMoves.length === 0) {
-    return false
-  }
-
-  return move === pendingMoves[0]
-}
-
-function handlePlayerMove(move: MoveEvent) {
-  moves++
-  if (
-    boardAPI?.getIsCheckmate() ||
-    boardAPI?.getIsStalemate() ||
-    boardAPI?.getIsInsufficientMaterial() ||
-    boardAPI?.getIsDraw() ||
-    boardAPI?.getIsThreefoldRepetition()
-  ) {
-    solvedPuzzle()
-    return true
-  }
-  if (validMove(move.lan)) {
-    pendingMoves = pendingMoves.slice(1)
-    runEnemyMove()
-  } else {
-    // invalidMove.value = true
-    new Audio(errorSound).play()
-    emit('failure')
-  }
-}
-
 function handleMove(move: MoveEvent) {
-  if (move.captured) {
-    new Audio(captureSound).play()
+  // if it's the player's turn, send the enemy move to the engine
+  if (boardAPI?.getTurnColor() === fullPlayerColor) {
+    if (fullPlayerColor !== engine?.getPlayerColor()) {
+      engine?.setPlayerColor(playerColor)
+    }
+    engine?.sendUserMove(boardAPI?.getFen() as string, move.lan)
   } else {
-    new Audio(moveSound).play()
-  }
-  // console.log('handleMove', move)
-  // console.log('player color: ', playerColor);
-  // console.log('engine color: ', engine?.getPlayerColor());
+    const lastPlayerMove = boardAPI?.getLastMove()
+    const playerMoveShouldBe = pendingPlayerMoves.shift()
+    if (
+      lastPlayerMove?.lan === playerMoveShouldBe &&
+      pendingEnemyMoves.length > 0
+    ) {
+      runEnemyMove()
+    } else {
+      // TODO: check this validations in lichess discord channel
+      // The question is: are there puzzles that end with stalemate,
+      // insufficient material, draw, threefold repetition, or fifty-move rule?
+      if (
+        boardAPI?.getIsCheckmate() ||
+        boardAPI?.getIsStalemate() ||
+        boardAPI?.getIsInsufficientMaterial() ||
+        boardAPI?.getIsDraw() ||
+        boardAPI?.getIsThreefoldRepetition() ||
+        (lastPlayerMove?.lan === playerMoveShouldBe &&
+          pendingEnemyMoves.length === 0)
+        // boardAPI?.getIsFiftyMoveRule() //check if vue3-chessboard has this method. If not, create it.
+      ) {
+        emit('solved')
+      } else {
+        new Audio(errorSound).play()
+        console.log('Error')
+        console.log('current fen', boardAPI?.getFen())
 
-  if (playerColor !== engine?.getPlayerColor()) {
-    engine?.setPlayerColor(playerColor)
-  }
-  // console.log(boardAPI?.getFen())
-  engine?.sendUserMove(boardAPI?.getFen() as string, move.lan)
-  if (move.color === playerColor[0]) {
-    handlePlayerMove(move)
+        console.log('lastPlayerMove', lastPlayerMove)
+        console.log('playerMoveShouldBe', playerMoveShouldBe)
+        const history = boardAPI?.getHistory()
+        console.log('history', history);        
+        emit('failure', history, originalExpectedMoves)
+      }
+    }
   }
 }
 
-// this function find the element with class chessboard-visualization and resize it.
-// It check if the element is present in the page and if it has a parent element,
-// then it set the width of the chessboard to the width of the parent element.
 function resizeBoard() {
   const chessboard = document.querySelector(
     '.chessboard-visualization',
@@ -182,26 +160,14 @@ nextTick(() => {
 
 onMounted(async () => {
   engine?.confirmNewGame()
-  engine?.setPlayerColor(playerColor)
+  engine?.setPlayerColor(fullPlayerColor)
   window.addEventListener('resize', resizeBoard)
-  resizeBoard()
   runEnemyMove()
-  playerColor = boardAPI?.getLastMove()?.color === 'w' ? 'black' : 'white'
+  const errorSoundPlayer:HTMLAudioElement = new Audio(errorSound)
+  // resizeBoard()
 })
 
-const logInfo = () => {
-  console.log('boardAPI', boardAPI)
-  console.log('engine', engine)
-}
-
-onBeforeMount(() => {
-  console.log('before mount')
-})
-onBeforeUpdate(() => {
-  console.log('before update')
-})
 onBeforeUnmount(() => {
-  console.log('before unmount')
   engine?.destroy()
 })
 </script>
