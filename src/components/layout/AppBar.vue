@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { useToggle, useDark } from '@vueuse/core'
 import { useAuthStore } from '@/stores/auth'
+import { googleOneTap, decodeCredential } from 'vue3-google-login'
+
+import type { User } from '@/types'
+
 const authStore = useAuthStore()
 const theme = useTheme()
 const isTactil = ref(false)
 const { drawer } = storeToRefs(useAppStore())
+const router = useRouter()
 const route = useRoute()
 const breadcrumbs = computed(() => {
   return route!.matched
@@ -40,6 +45,27 @@ const iconSize = computed(() => {
     return 50
   }
 })
+const handleLogout = () => {
+  authStore.logout()
+  // redirect to home
+  router.push('/')
+}
+
+const handleLogin = () => {
+  // redirect to login
+  // router.push('/login_google')
+  googleOneTap()
+    .then((response) => {
+      // This promise is resolved when user selects an account from the the One Tap prompt
+      // console.log('Handle the response', decodeCredential(response.credential))
+      const decodedData = decodeCredential(response.credential) as User;
+      console.log('user', decodedData);
+      authStore.login(decodedData.given_name, decodedData.email, decodedData.picture);
+    })
+    .catch((error) => {
+      console.log('Handle the error', error)
+    })
+}
 </script>
 
 <template>
@@ -71,7 +97,7 @@ const iconSize = computed(() => {
           v-if="!authStore.isLoggedIn"
           icon
           class="bg-blue-lighten-2"
-          @click="$router.push('/login_google')"
+          @click="handleLogin"
         >
           <v-icon size="25" icon="mdi-login"></v-icon>
         </v-btn>
@@ -79,16 +105,15 @@ const iconSize = computed(() => {
         <v-avatar
           v-if="authStore.isLoggedIn && !isTactil"
           size="40"
-          class="me-2"
-          @click="$router.push('/profile')"
+          class="bg-blue-lighten-2 me-2"
         >
-          <v-img :src="authStore.user?.photoURL" />
+          <v-img :src="authStore.user?.picture" />
         </v-avatar>
         <v-btn
           v-if="authStore.isLoggedIn"
-          color="red-lighten-2"
+          class="bg-red-lighten-2"
           icon
-          @click="authStore.logout"
+          @click="handleLogout"
         >
           <v-icon size="30" icon="mdi-logout"></v-icon>
         </v-btn>

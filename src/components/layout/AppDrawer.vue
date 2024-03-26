@@ -4,12 +4,21 @@ import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 
-// filter route puzzles_for_stockfish, if you want to hide it from the drawer
-const filteredRoutes = routes.filter(
-  (route) =>
-    route.name !== '/puzzles_for_stockfish' ||
-    (route.name === '/puzzles_for_stockfish' && authStore.loggedIn),
-)
+// Filter route puzzles_for_stockfish, if you want to hide it from the drawer
+const filteredRoutes = computed(() => {
+  // Filter routes based on login state
+  return routes.filter((route) =>
+    //
+    {
+      switch (route.name) {
+        case '/puzzles_for_stockfish':
+          return authStore.isLoggedIn
+        default:
+          return true
+      }
+    },
+  )
+})
 
 const appStore = useAppStore()
 const { drawer: drawerStored } = storeToRefs(appStore)
