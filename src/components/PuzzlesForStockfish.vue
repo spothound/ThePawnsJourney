@@ -62,11 +62,7 @@ function nextPuzzle() {
 
 function handleFailure(history: string[], originalExpectedMoves: string[]) {
   totalErrors.value++
-  reportPuzzle(
-    currentPuzzle.value.PuzzleId,
-    history,
-    originalExpectedMoves,
-  )
+  reportPuzzle(currentPuzzle.value.PuzzleId, history, originalExpectedMoves)
   if (auto.value) nextPuzzle()
 }
 
@@ -121,11 +117,14 @@ onBeforeMount(() => {
       v-model="alert"
       border="start"
       close-label="Close Alert"
-      color="deep-purple-accent-4"
-      title="Closable Alert"
+      color="#C51162"
+      title="Congratulations!"
       variant="tonal"
+      icon="mdi-firework"
+      density="compact"
+      theme="dark"
       closable
-      class="max-w-screen-md my-4 mx-auto p-3"
+      class="max-w-screen-md mt-0 mb-6 p-3"
     >
       You have completed all the puzzles in this collection!
     </v-alert>

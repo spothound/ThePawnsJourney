@@ -11,3 +11,10 @@ export type Puzzle = {
   OpeningTags: string
 }
 export type TurnColor = 'w' | 'b'
+
+export interface User {
+  username: string
+  email: string
+}
+
+export type AccessToken = string

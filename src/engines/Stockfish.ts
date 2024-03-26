@@ -2,7 +2,7 @@ import { type BoardApi } from 'vue3-chessboard'
 import { type SquareKey } from 'vue3-chessboard'
 
 export class Stockfish {
-  private stockfish: Worker | undefined
+  private stockfish: Worker
   private boardApi: BoardApi | undefined
   public bestMove: string | null = null
   public engineName: string | null = 'Stockfish 16'
@@ -13,20 +13,13 @@ export class Stockfish {
     // console.info('colorToMove: ', colorToMove)
     this.colorToMove = colorToMove
     this.boardApi = boardApi
-    // const wasmSupported =
-    //   typeof WebAssembly === 'object' &&
-    //   WebAssembly.validate(
-    //     Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00),
-    //   )
 
-    // this.stockfish = new Worker('stockfish.js')
-    this.stockfish = new Worker('stockfish.wasm.js')
-    // this.stockfish = new Worker(
-    //   this.wasmThreadsSupported() ? 'stockfish.wasm.js' : 'stockfish.js',
-    // )
+    this.stockfish = new Worker(
+      this.wasmThreadsSupported() ? 'stockfish.wasm.js' : 'stockfish.js',
+    )
 
     this.setupListeners()
-    ;(this.stockfish as Worker).postMessage('uci')
+    this.stockfish.postMessage('uci')
   }
   private wasmThreadsSupported() {
     // WebAssembly 1.0
@@ -71,31 +64,31 @@ export class Stockfish {
   }
 
   private setupListeners(): void {
-    ;(this.stockfish as Worker).addEventListener('message', (data) =>
+    this.stockfish.addEventListener('message', (data) =>
       this.handleEngineStdout(data),
     )
-    ;(this.stockfish as Worker).addEventListener('error', (err) =>
-      console.error(err),
-    )
-    ;(this.stockfish as Worker).addEventListener('messageerror', (err) =>
-      console.error(err),
-    )
+    this.stockfish.addEventListener('error', (err) => console.error(err))
+    this.stockfish.addEventListener('messageerror', (err) => console.error(err))
   }
 
   private handleEngineStdout(data: MessageEvent<unknown>) {
     const uciStringSplitted = (data.data as string).split(' ')
     // console.info('Stockfish message: ', data.data)
     if (uciStringSplitted[0] === 'uciok') {
-      this.setOption('UCI_AnalyseMode', 'true')
-      this.setOption('Analysis Contempt', 'Off')
-      ;(this.stockfish as Worker).postMessage('ucinewgame')
-      ;(this.stockfish as Worker).postMessage('isready')
+      // this.setOption('UCI_AnalyseMode', 'true')
+      // this.setOption('Analysis Contempt', 'Off')
+      this.setOption('UCI_Elo', '3190')
+      this.setOption('Skill Level', '20')
+      this.setOption('Skill Level Maximum Error', '600')
+      this.setOption('Skill Level Probability', '128')
+      this.stockfish.postMessage('ucinewgame')
+      this.stockfish.postMessage('isready')
       return
     }
 
     if (uciStringSplitted[0] === 'readyok') {
-      // ;(this.stockfish as Worker).postMessage('go depth 20')
-      ;(this.stockfish as Worker).postMessage('go movetime 2000')
+      ;this.stockfish.postMessage('go depth 25')
+      // this.stockfish.postMessage('go movetime 500')
       return
     }
 
@@ -123,22 +116,18 @@ export class Stockfish {
   }
 
   private setOption(name: string, value: string): void {
-    ;(this.stockfish as Worker).postMessage(
-      `setoption name ${name} value ${value}`,
-    )
+    this.stockfish.postMessage(`setoption name ${name} value ${value}`)
   }
 
   public sendUserMove(position: string, move: string) {
-    ;(this.stockfish as Worker).postMessage(
-      `position fen ${position} moves ${move}`,
-    )
-    // ;(this.stockfish as Worker).postMessage('go depth 20')
-    ;(this.stockfish as Worker).postMessage('go movetime 2000')
+    this.stockfish.postMessage(`position fen ${position} moves ${move}`)
+    ;this.stockfish.postMessage('go depth 25')
+    // this.stockfish.postMessage('go movetime 500')
   }
 
   public confirmNewGame() {
     // console.info('confirmNewGame')
-    ;(this.stockfish as Worker).postMessage('ucinewgame')
+    // this.stockfish.postMessage('ucinewgame')
   }
   public setPlayerColor(playerColor: string | null = null) {
     this.colorToMove = playerColor
@@ -147,13 +136,12 @@ export class Stockfish {
     return this.colorToMove
   }
   public stopEngine() {
-    ;(this.stockfish as Worker).postMessage('stop')
+    this.stockfish.postMessage('stop')
   }
   public quit() {
-    ;(this.stockfish as Worker).postMessage('quit')
+    this.stockfish.postMessage('quit')
   }
   public destroy() {
-    ;(this.stockfish as Worker).terminate()
-    this.stockfish = undefined
+    this.stockfish.terminate()
   }
 }

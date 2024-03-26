@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import router from '@/plugins/router';
-import data from '../puzzles/puzzles_1.json'
+import data from '../puzzles/puzzles_200.json'
 definePage({
   meta: {
     icon: 'mdi-numeric-1',
@@ -12,6 +12,6 @@ definePage({
 
 <template>
   <div class="wrapper w-full">
-    <TrainingSession :puzzle-colection="data" :level="0" />
+    <TrainingSession :puzzle-colection="data" :level="200" />
   </div>
 </template>

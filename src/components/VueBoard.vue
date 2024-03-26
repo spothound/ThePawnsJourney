@@ -111,7 +111,10 @@ function handleMove(move: MoveEvent) {
       lastPlayerMove?.lan === playerMoveShouldBe &&
       pendingEnemyMoves.length > 0
     ) {
-      runEnemyMove()
+      setTimeout(() => {
+        runEnemyMove()
+      }, 500)
+      // runEnemyMove()
     } else {
       // TODO: check this validations in lichess discord channel
       // The question is: are there puzzles that end with stalemate,
@@ -159,11 +162,10 @@ nextTick(() => {
 })
 
 onMounted(async () => {
-  engine?.confirmNewGame()
+  // engine?.confirmNewGame()
   engine?.setPlayerColor(fullPlayerColor)
   window.addEventListener('resize', resizeBoard)
   runEnemyMove()
-  const errorSoundPlayer:HTMLAudioElement = new Audio(errorSound)
   // resizeBoard()
 })
 

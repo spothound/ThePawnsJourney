@@ -1,5 +1,15 @@
 <script setup lang="ts">
 import { routes } from 'vue-router/auto/routes'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+
+// filter route puzzles_for_stockfish, if you want to hide it from the drawer
+const filteredRoutes = routes.filter(
+  (route) =>
+    route.name !== '/puzzles_for_stockfish' ||
+    (route.name === '/puzzles_for_stockfish' && authStore.loggedIn),
+)
 
 const appStore = useAppStore()
 const { drawer: drawerStored } = storeToRefs(appStore)
@@ -47,13 +57,17 @@ nextTick(() => {
           <v-list-item-title
             class="text-h6 font-weight-bold"
             style="line-height: 2rem"
-            >Select Level
+            >Training Tools
           </v-list-item-title>
         </v-list-item>
       </v-list>
     </template>
     <v-list nav density="compact">
-      <AppDrawerItem v-for="route in routes" :key="route.name" :item="route" />
+      <AppDrawerItem
+        v-for="route in filteredRoutes"
+        :key="route.name"
+        :item="route"
+      />
     </v-list>
     <v-spacer />
     <template #append>
