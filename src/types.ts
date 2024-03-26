@@ -15,6 +15,7 @@ export type TurnColor = 'w' | 'b'
 export interface User {
   username: string
   email: string
+  photoURL: string
 }
 
 export type AccessToken = string
