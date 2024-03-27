@@ -1,0 +1,9 @@
+t_zELCX	{"id":"zELCX","chunk":1,"date":"2024-03-20T12:20:55.980Z"}	2 solutions (check for mate)
+puzzleReport_l8P2v	{"id":"l8P2v","chunk":1,"date":"2024-03-20T11:40:40.683Z"}	puzzle ok
+puzzleReport_8AqZT	{"id":"8AqZT","chunk":1,"date":"2024-03-20T09:50:52.168Z"}	puzzle ok
+puzzleReport_SFK8v	{"id":"SFK8v","chunk":1,"date":"2024-03-20T13:50:31.826Z"}	puzzle ok
+puzzleReport_wk945	{"id":"wk945","chunk":1,"date":"2024-03-20T12:13:41.746Z"}	puzzle ok
+puzzleReport_qnoO9	{"id":"qnoO9","chunk":1,"date":"2024-03-20T12:59:05.858Z"}	puzzle ok
+puzzleReport_Bm4TT	{"id":"Bm4TT","chunk":1,"date":"2024-03-20T13:01:39.276Z"}	puzzle ok
+puzzleReport_0AZ8J	{"id":"0AZ8J","chunk":1,"date":"2024-03-20T09:25:18.126Z"}	puzzle ok
+puzzleReport_QpPBF puzzle ok
