@@ -20,6 +20,9 @@ dependencies:
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(typescript@5.3.3)(vue@3.4.3)
+  stockfish.js:
+    specifier: ^10.0.2
+    version: 10.0.2
   uuid:
     specifier: ^9.0.1
     version: 9.0.1
@@ -35,6 +38,9 @@ dependencies:
   vue3-chessboard:
     specifier: ^1.3.2
     version: 1.3.2(vue@3.4.3)
+  vue3-google-login:
+    specifier: ^2.0.26
+    version: 2.0.26(vue@3.4.3)
   vuetify:
     specifier: ^3.4.9
     version: 3.4.9(typescript@5.3.3)(vite-plugin-vuetify@2.0.1)(vue@3.4.3)
@@ -3290,6 +3296,10 @@ packages:
     resolution: {integrity: sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==}
     dev: true
 
+  /stockfish.js@10.0.2:
+    resolution: {integrity: sha512-treB3AYcdvRJ9SDPOyL0R2NcEAtQgG432nStfRzR4wzVELGQ6iVoeBHwvirHTfocNOTims7XNkK3SADaocsJmQ==}
+    dev: false
+
   /stop-iteration-iterator@1.0.0:
     resolution: {integrity: sha512-iCGQj+0l0HOdZ2AEeBADlsRC+vsnDsZsbdSiH1yNSjcfKM7fdpCMfqAL/dwF5BLiw/XhRft/Wax6zQbhq2BcjQ==}
     engines: {node: '>= 0.4'}
@@ -3929,6 +3939,14 @@ packages:
     dependencies:
       chess.js: 1.0.0-beta.7
       chessground: 9.0.4
+      vue: 3.4.3(typescript@5.3.3)
+    dev: false
+
+  /vue3-google-login@2.0.26(vue@3.4.3):
+    resolution: {integrity: sha512-BuTSIeSjINNHNPs+BDF4COnjWvff27IfCBDxK6JPRqvm57lF8iK4B3+zcG8ud6BXfZdyuiDlxletbEDgg4/RFA==}
+    peerDependencies:
+      vue: ^3.0.3
+    dependencies:
       vue: 3.4.3(typescript@5.3.3)
     dev: false
 

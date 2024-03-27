@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import router from '@/plugins/router';
+import PuzzlesForStockfish from '@/components/PuzzlesForStockfish.vue';
 import data from '../puzzles/puzzles_200.json'
 definePage({
   meta: {
-    icon: 'mdi-numeric-1',
-    title: 'Training 0-500',
+    icon: 'mdi-fish',
+    title: 'Stockfish Puzzles',
     drawerIndex: 0,
   },
 })
@@ -12,6 +12,6 @@ definePage({
 
 <template>
   <div class="wrapper w-full">
-    <TrainingSession :puzzle-colection="data" :level="200" />
+    <PuzzlesForStockfish :puzzle-colection="data" :chunk="200" />
   </div>
 </template>
