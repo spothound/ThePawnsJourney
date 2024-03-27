@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { eraseCookies } from '@/helper'
 import type { User } from '@/types'
 
 export const useAuthStore = defineStore('auth', {
@@ -8,16 +9,18 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
-    login(given_name: string, email: string, picture: string) {
+    login(data: User) {
       // Logic for logging in and updating the state
       this.loggedIn = true
-      this.user = { given_name, email, picture } as User
+      this.user = data
     },
 
     logout() {
       // Logic for logging out and clearing the state
       this.loggedIn = false
       this.user = null
+      // Clear cookies
+      eraseCookies()
     },
   },
   getters: {

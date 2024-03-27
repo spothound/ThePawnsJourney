@@ -2,6 +2,8 @@
 import { useToggle, useDark } from '@vueuse/core'
 import { useAuthStore } from '@/stores/auth'
 import { googleOneTap, decodeCredential } from 'vue3-google-login'
+import { loginDataToLocalstorage, checkIdOnLocalStorage } from '@/helper'
+import type { GoogleOneTapPayload } from '@/types'
 
 import type { User } from '@/types'
 
@@ -58,9 +60,23 @@ const handleLogin = () => {
     .then((response) => {
       // This promise is resolved when user selects an account from the the One Tap prompt
       // console.log('Handle the response', decodeCredential(response.credential))
-      const decodedData = decodeCredential(response.credential) as User;
-      console.log('user', decodedData);
-      authStore.login(decodedData.given_name, decodedData.email, decodedData.picture);
+      const decodedData = decodeCredential(
+        response.credential,
+      ) as GoogleOneTapPayload
+      console.log('response', response.credential)
+      console.log('user', decodedData)
+      const data: User = {
+        id: response.credential,
+        username: decodedData.given_name,
+        email: decodedData.email,
+        picture: decodedData.picture,
+        verified: decodedData.email_verified,
+      }
+      authStore.login(data)
+      if (!checkIdOnLocalStorage(data.id)) {
+        console.log('Id not found in localstorage')
+        loginDataToLocalstorage(data)
+      }
     })
     .catch((error) => {
       console.log('Handle the error', error)
