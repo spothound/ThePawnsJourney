@@ -25,3 +25,13 @@ export const eraseCookies = () => {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
   }
 }
+
+// It shuffles the array (Fisher-Yates algorithm)
+export function shuffleArray<T>(array: T[]): T[] {
+  const shuffledArray = [...array]
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]
+  }
+  return shuffledArray
+}
