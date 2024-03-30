@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@datadog/browser-logs':
-    specifier: ^5.8.0
-    version: 5.8.0
   '@types/uuid':
     specifier: ^9.0.7
     version: 9.0.7
@@ -214,21 +211,6 @@ packages:
     dependencies:
       postcss-selector-parser: 6.0.15
     dev: true
-
-  /@datadog/browser-core@5.8.0:
-    resolution: {integrity: sha512-aNMSB+tLu5aKm/uzswy5d6KDgGtMs2uMxsGWdZ3lmqorEHLXk5kPNTEVRJfeE49EJaWaxiTYQuuuLo0c5S0rUA==}
-    dev: false
-
-  /@datadog/browser-logs@5.8.0:
-    resolution: {integrity: sha512-7UnLrYEICdY4KLGct9q88f5Xxaad+47He1H7PPnfj1p6HDHtadjRYxb/+NQxoezWFLDpqIIgQgqr4GDQYgtOFQ==}
-    peerDependencies:
-      '@datadog/browser-rum': 5.8.0
-    peerDependenciesMeta:
-      '@datadog/browser-rum':
-        optional: true
-    dependencies:
-      '@datadog/browser-core': 5.8.0
-    dev: false
 
   /@esbuild/aix-ppc64@0.19.11:
     resolution: {integrity: sha512-FnzU0LyE3ySQk7UntJO4+qIiQgI7KoODnZg5xzXIrFJlKd2P2gwHsHY4927xj9y5PJmJSzULiUCWmv7iWnNa7g==}
