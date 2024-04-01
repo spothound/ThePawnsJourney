@@ -7,9 +7,11 @@ definePage({
   },
 })
 // this file contains the images paths and the quotes
-import data from '@/data/quotes.json';
+import data from '@/data/quotes.json'
 // generate as many random quotes as images
-const randomQuotes = data.quotes.sort(() => Math.random() - 0.5).slice(0, data.images.length);
+const randomQuotes = data.quotes
+  .sort(() => Math.random() - 0.5)
+  .slice(0, data.images.length)
 function setEloRange(min: number, max: number) {
   localStorage.setItem('eloRange', JSON.stringify(`${min}_${max}`))
 }
@@ -20,11 +22,19 @@ function setEloRange(min: number, max: number) {
     <v-row>
       <v-col cols="12">
         <v-card class="pa-2" outlined>
-          <v-carousel cycle height="300" hide-delimiter-background show-arrows="hover" class="rounded-md">
+          <v-carousel
+            cycle
+            height="300"
+            hide-delimiter-background
+            show-arrows="hover"
+            class="rounded-md"
+          >
             <v-carousel-item v-for="(image, i) in data.images" :key="i">
               <v-sheet height="100%">
-                <div :style="{ backgroundImage: `url(${image})` }"
-                  class="d-flex fill-height flex-column justify-center align-center text-center cover font-nunito">
+                <div
+                  :style="{ backgroundImage: `url(${image})` }"
+                  class="d-flex fill-height flex-column justify-center align-center text-center cover font-nunito"
+                >
                   <div class="text-h5 text-overlay mx-2 mb-2 font-bold">
                     {{ randomQuotes[i].text }}
                   </div>
@@ -36,19 +46,25 @@ function setEloRange(min: number, max: number) {
               </v-sheet>
             </v-carousel-item>
           </v-carousel>
-          <v-card-title class="headline font-kanit text-blue-500 font-bold mt-3">Welcome to The Pawn's
-            Journey</v-card-title>
-          <v-card-text>This application is designed to help you improve your chess tactics by using puzzles from the
-            public Lichess database. Choose a level (elo rank) and the application will provide you with puzzles adapted
-            to that
-            level.</v-card-text>
-          <v-card-text>All the logic of the application runs in your browser, not on a server or with a database. This
-            means that it will not store any data about your results (except locally in your browser's storage data to
-            track the puzzles you have solved).</v-card-text>
+          <v-card-title class="headline font-kanit text-blue-500 font-bold mt-3"
+            >Welcome to The Pawn's Journey</v-card-title
+          >
+          <v-card-text
+            >This application is designed to help you improve your chess tactics
+            by using puzzles from the public Lichess database. Choose a level
+            (elo rank) and the application will provide you with puzzles adapted
+            to that level.</v-card-text
+          >
+          <v-card-text
+            >All the logic of the application runs in your browser, not on a
+            server or with a database. This means that it will not store any
+            data about your results (except locally in your browser's storage
+            data to track the puzzles you have solved).</v-card-text
+          >
           <v-card-text>
-            So if you play on different devices, you may see some puzzles you have already solved, but as the purpose of
-            this
-            app is practice, repetition is beneficial.
+            So if you play on different devices, you may see some puzzles you
+            have already solved, but as the purpose of this app is practice,
+            repetition is beneficial.
           </v-card-text>
         </v-card>
         <!-- <v-card class="pa-2" outlined>

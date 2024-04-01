@@ -9,7 +9,7 @@ const props = defineProps({
     required: true,
   },
   puzzleColection: {
-    type: Array,
+    type: Array as () => Puzzle[],
     required: true,
   },
 })
@@ -21,12 +21,11 @@ const allowClue = ref(false)
 const errorOccurred = ref(false)
 const successOccurred = ref(false)
 const totalPuzzless = ref(0)
-const maxIndex = props.puzzleColection.length - 1
-const puzzleRankings = new Array(maxIndex).fill(-1)
+const shuffledPuzzles = ref([] as Puzzle[])
 const solved = ref(false)
 const puzzleRef = ref()
-const requiredTime = ref(0)
-const currentPuzzle = ref()
+const currentPuzzle = ref({} as Puzzle)
+const alert = ref(false)
 const puzzleClockRef = ref({
   stop: () => {
     return 0
@@ -43,37 +42,73 @@ const sessionClockRef = ref({
     return 0
   },
 })
-function nextPuzzle() {
+
+// this alert will be shown when the user (or stockfish) completes all the puzzles
+const showAlert = () => {
+  alert.value = true
+}
+
+/**
+ * @description Reset the puzzle parameters
+ * @returns {void} 
+ */
+const resetPuzzleParams = () => {
   solved.value = false
   allowClue.value = false
   currentErrors.value = 0
   puzzleClockRef.value.restart()
-  // get an array of indices where puzzleRankings equals -1
-  const unplayedPuzzles = puzzleRankings
-    .map((ranking, index) => (ranking === -1 ? index : -1))
-    .filter((index) => index !== -1)
-  // if there are no unplayed puzzles, do nothing
-  if (unplayedPuzzles.length === 0)
-    Math.floor(Math.random() * puzzleRankings.length)
-  // get a random index from unplayedPuzzles
-  const randomIndex = Math.floor(Math.random() * unplayedPuzzles.length)
-  currentPuzzle.value = unplayedPuzzles[randomIndex]
 }
 
-nextPuzzle()
+/**
+ * @description Restart the session
+ * @returns {void} 
+ */
+const restartSession = () => {
+  resetPuzzleParams()
+  totalErrors.value = 0
+  totalPuzzless.value = 0
+  sessionClockRef.value.restart()
+  shuffledPuzzles.value = shuffleArray(props.puzzleColection)
+  nextPuzzle()
+}
 
-async function showError() {
+/**
+ * @description Show an alert when the user completes all the puzzles
+ * @returns {void} 
+ */
+const nextPuzzle = () => {
+  resetPuzzleParams()
+  if (shuffledPuzzles.value.length > 0) {
+    currentPuzzle.value = shuffledPuzzles.value.pop() as Puzzle
+  } else {
+    showAlert()
+  }
+}
+
+/**
+ * @description Show an error feedback that will disappear after 1 second
+ * @returns {Promise<void>} 
+ */
+const showError = async () => {
   errorOccurred.value = true
   await new Promise((resolve) => setTimeout(resolve, 1000))
   errorOccurred.value = false
 }
 
-async function showSuccess() {
+/**
+ * @description Show a success feedback that will disappear after 1 second
+ * @returns {Promise<void>} 
+ */
+const showSuccess = async () => {
   successOccurred.value = true
   await new Promise((resolve) => setTimeout(resolve, 1000))
   successOccurred.value = false
 }
 
+/**
+ * @description Handle the feedback when the user fails or completes a puzzle
+ * @returns {void} 
+ */
 const textClasses = computed(() => {
   return {
     'text-lime-500': successOccurred.value,
@@ -81,7 +116,56 @@ const textClasses = computed(() => {
   }
 })
 
-function calculateRank(timeElapsed: number, moves: number, failures: number) {
+/**
+ * @description It counts the number of errors and enables the clue button (hint)
+ * @returns {void} 
+ */
+const handleFailure = () => {
+  if (currentErrors.value == 0) {
+    totalErrors.value++
+    showError()
+  }
+  currentErrors.value++
+  if (currentErrors.value > 0) allowClue.value = true
+  if (auto.value) nextPuzzle()
+}
+
+/**
+ * @description It gives feedback when the user completes a puzzle. Also, it calculates the rank and saves the data in the local storage
+ * @param {number} moves - The number of moves
+ * @param {number} failures - The number of failures
+ * @returns {void} 
+ */
+const puzzleSolved = (moves: number, failures: number) => {
+  showSuccess()
+  totalPuzzless.value++
+  solved.value = true
+  const timeElapsed = puzzleClockRef.value ? puzzleClockRef.value.stop() : 0
+  const rank: number = calculateRank(timeElapsed, moves, failures)
+  localStorage.setItem(
+    `puzzle_${currentPuzzle.value.PuzzleId}`,
+    JSON.stringify({
+      rank,
+      moves,
+      timeElapsed,
+      failures,
+    }),
+  )
+  if (auto.value) nextPuzzle()
+}
+
+/**
+ * @description It calculates the rank based on the time elapsed, the number of moves, and the number of failures
+ * @param {number} timeElapsed - The time elapsed
+ * @param {number} moves - The number of moves
+ * @param {number} failures - The number of failures
+ * @returns {number} 
+ */
+const calculateRank = (
+  timeElapsed: number,
+  moves: number,
+  failures: number,
+) => {
   let rank = 0
   const averageTime = timeElapsed / moves
   if (failures > 1) rank = 0
@@ -93,54 +177,41 @@ function calculateRank(timeElapsed: number, moves: number, failures: number) {
   return rank
 }
 
-function handleFailure() {
-  if (currentErrors.value == 0) {
-    totalErrors.value++
-    showError()
-  }
-  currentErrors.value++
-  if (currentErrors.value > 0) allowClue.value = true
-  if (auto.value) nextPuzzle()
-}
-
-function puzzleSolved(moves: number, failures: number) {
-  showSuccess()
-  totalPuzzless.value++
-  currentErrors.value = 0
-  solved.value = true
-  const timeElapsed = puzzleClockRef.value ? puzzleClockRef.value.stop() : 0
-  requiredTime.value = timeElapsed
-  puzzleRankings[currentPuzzle.value] = calculateRank(
-    timeElapsed,
-    moves,
-    failures,
-  )
-  localStorage.setItem(
-    `puzzleRankings_${props.level}`,
-    JSON.stringify(puzzleRankings),
-  )
-  if (auto.value) nextPuzzle()
-}
-
-function restartSession() {
-  totalErrors.value = 0
-  totalPuzzless.value = 0
-  puzzleRankings.fill(-1)
-  localStorage.setItem(
-    `puzzleRankings_${props.level}`,
-    JSON.stringify(puzzleRankings),
-  )
-  sessionClockRef.value.restart()
-  nextPuzzle()
-}
-
-function sendClue() {
+/**
+ * @description It draws a hint on the board
+ * @returns {void} 
+ */
+const sendClue = () => {
   puzzleRef.value.clue()
 }
+
+/**
+ * @description It shuffles the puzzles and starts the first puzzle
+ * @returns {void} 
+ */
+onBeforeMount(() => {
+  shuffledPuzzles.value = shuffleArray(props.puzzleColection)
+  nextPuzzle()
+})
 </script>
 
 <template>
   <v-container fluid class="overflow-hidden">
+    <v-alert
+      v-model="alert"
+      border="start"
+      close-label="Close Alert"
+      color="#C51162"
+      title="Congratulations!"
+      variant="tonal"
+      icon="mdi-firework"
+      density="compact"
+      theme="dark"
+      closable
+      class="max-w-screen-md mt-0 mb-6 p-3"
+    >
+      You have completed all the puzzles in this collection!
+    </v-alert>
     <!-- puzzle timer -->
     <v-row class="grid">
       <v-col
@@ -167,8 +238,8 @@ function sendClue() {
       >
         <ChessPuzzle
           ref="puzzleRef"
-          :key="(puzzleColection[currentPuzzle] as any).PuzzleId"
-          :puzzle-data="puzzleColection[currentPuzzle] as Record<string, any>"
+          :key="currentPuzzle.PuzzleId"
+          :puzzle-data="currentPuzzle"
           @failure="handleFailure"
           @solved="puzzleSolved"
         >
