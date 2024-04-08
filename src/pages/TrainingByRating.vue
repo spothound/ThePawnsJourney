@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import data from '../puzzles/puzzles_200.json'
 import type { Puzzle } from '@/types'
+
+const puzzleColection = JSON.parse(localStorage.getItem('puzzleColection') as string);
+
+if (!puzzleColection) {
+  window.location.href = '/Setup';
+}
 
 definePage({
   meta: {
@@ -13,6 +18,6 @@ definePage({
 
 <template>
   <div class="wrapper w-full">
-    <TrainingSession :puzzle-colection="data as Puzzle[]" :level="200" />
+    <TrainingSession :puzzle-colection="puzzleColection as Puzzle[]" />
   </div>
 </template>

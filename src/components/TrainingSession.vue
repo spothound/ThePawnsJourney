@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import ChessPuzzle from './ChessPuzzle.vue'
 import { ref, computed } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
+import { shuffleArray } from '@/helper';
+import { type Puzzle } from '@/types'
 
 const props = defineProps({
-  level: {
-    type: Number,
-    required: true,
-  },
   puzzleColection: {
     type: Array as () => Puzzle[],
     required: true,
@@ -50,7 +47,7 @@ const showAlert = () => {
 
 /**
  * @description Reset the puzzle parameters
- * @returns {void} 
+ * @returns {void}
  */
 const resetPuzzleParams = () => {
   solved.value = false
@@ -61,7 +58,7 @@ const resetPuzzleParams = () => {
 
 /**
  * @description Restart the session
- * @returns {void} 
+ * @returns {void}
  */
 const restartSession = () => {
   resetPuzzleParams()
@@ -69,12 +66,14 @@ const restartSession = () => {
   totalPuzzless.value = 0
   sessionClockRef.value.restart()
   shuffledPuzzles.value = shuffleArray(props.puzzleColection)
+  localStorage.removeItem('puzzleColection')
+  window.location.href = '/Setup'
   nextPuzzle()
 }
 
 /**
  * @description Show an alert when the user completes all the puzzles
- * @returns {void} 
+ * @returns {void}
  */
 const nextPuzzle = () => {
   resetPuzzleParams()
@@ -87,7 +86,7 @@ const nextPuzzle = () => {
 
 /**
  * @description Show an error feedback that will disappear after 1 second
- * @returns {Promise<void>} 
+ * @returns {Promise<void>}
  */
 const showError = async () => {
   errorOccurred.value = true
@@ -97,7 +96,7 @@ const showError = async () => {
 
 /**
  * @description Show a success feedback that will disappear after 1 second
- * @returns {Promise<void>} 
+ * @returns {Promise<void>}
  */
 const showSuccess = async () => {
   successOccurred.value = true
@@ -107,7 +106,7 @@ const showSuccess = async () => {
 
 /**
  * @description Handle the feedback when the user fails or completes a puzzle
- * @returns {void} 
+ * @returns {void}
  */
 const textClasses = computed(() => {
   return {
@@ -118,7 +117,7 @@ const textClasses = computed(() => {
 
 /**
  * @description It counts the number of errors and enables the clue button (hint)
- * @returns {void} 
+ * @returns {void}
  */
 const handleFailure = () => {
   if (currentErrors.value == 0) {
@@ -134,7 +133,7 @@ const handleFailure = () => {
  * @description It gives feedback when the user completes a puzzle. Also, it calculates the rank and saves the data in the local storage
  * @param {number} moves - The number of moves
  * @param {number} failures - The number of failures
- * @returns {void} 
+ * @returns {void}
  */
 const puzzleSolved = (moves: number, failures: number) => {
   showSuccess()
@@ -159,7 +158,7 @@ const puzzleSolved = (moves: number, failures: number) => {
  * @param {number} timeElapsed - The time elapsed
  * @param {number} moves - The number of moves
  * @param {number} failures - The number of failures
- * @returns {number} 
+ * @returns {number}
  */
 const calculateRank = (
   timeElapsed: number,
@@ -179,7 +178,7 @@ const calculateRank = (
 
 /**
  * @description It draws a hint on the board
- * @returns {void} 
+ * @returns {void}
  */
 const sendClue = () => {
   puzzleRef.value.clue()
@@ -187,7 +186,7 @@ const sendClue = () => {
 
 /**
  * @description It shuffles the puzzles and starts the first puzzle
- * @returns {void} 
+ * @returns {void}
  */
 onBeforeMount(() => {
   shuffledPuzzles.value = shuffleArray(props.puzzleColection)
@@ -236,14 +235,24 @@ onBeforeMount(() => {
         class="p-0 mb-3 xxxs:mb-2 md:w-full lg:landscape:max-w-[85vh] 2xl:landscape:max-w-[90vh]"
         order-md="0"
       >
-        <ChessPuzzle
-          ref="puzzleRef"
-          :key="currentPuzzle.PuzzleId"
-          :puzzle-data="currentPuzzle"
-          @failure="handleFailure"
-          @solved="puzzleSolved"
-        >
-        </ChessPuzzle>
+      <Suspense>
+          <template #default>
+        <LichessPuzzle
+              ref="puzzleRef"
+              :key="currentPuzzle.PuzzleId"
+              :puzzle-id="currentPuzzle.PuzzleId"
+              @failure="handleFailure"
+              @solved="puzzleSolved"
+            >
+        </LichessPuzzle>
+          </template>
+          <template #fallback>
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </template>
+        </Suspense>
       </v-col>
       <v-col id="puzzle-actions-container" class="p-0 v-center" order-md="2">
         <!-- actions -->

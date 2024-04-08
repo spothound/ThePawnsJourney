@@ -11,7 +11,7 @@ export const checkIdOnLocalStorage = (id: string): boolean => {
 }
 
 // It saves the user data to the local storage
-export const loginDataToLocalstorage = (data: User) => {  
+export const loginDataToLocalstorage = (data: User) => {
   localStorage.setItem(data.id, JSON.stringify(data))
 }
 

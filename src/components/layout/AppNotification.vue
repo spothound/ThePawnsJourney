@@ -18,9 +18,9 @@ function toggleAll() {
     m.show = showAll.value
   })
   if (showAll.value) {
-    timeout.value = -1
+    timeout.value = -1 as number
   } else {
-    timeout.value = 5000
+    timeout.value = 5000 as number
   }
 }
 </script>

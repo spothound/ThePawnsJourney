@@ -42,13 +42,15 @@ declare module 'vue-router/auto/routes' {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
     '/homepage': RouteRecordInfo<'/homepage', '/homepage', Record<never, never>, Record<never, never>>,
-    '/login_google': RouteRecordInfo<'/login_google', '/login_google', Record<never, never>, Record<never, never>>,
+    '/LoginGoogle': RouteRecordInfo<'/LoginGoogle', '/LoginGoogle', Record<never, never>, Record<never, never>>,
     '/nested/menu1': RouteRecordInfo<'/nested/menu1', '/nested/menu1', Record<never, never>, Record<never, never>>,
     '/nested/menu2': RouteRecordInfo<'/nested/menu2', '/nested/menu2', Record<never, never>, Record<never, never>>,
     '/nested/menu2/menu2-1': RouteRecordInfo<'/nested/menu2/menu2-1', '/nested/menu2/menu2-1', Record<never, never>, Record<never, never>>,
     '/nested/menu2/menu2-2': RouteRecordInfo<'/nested/menu2/menu2-2', '/nested/menu2/menu2-2', Record<never, never>, Record<never, never>>,
-    '/puzzles_for_stockfish': RouteRecordInfo<'/puzzles_for_stockfish', '/puzzles_for_stockfish', Record<never, never>, Record<never, never>>,
-    '/training_0_500': RouteRecordInfo<'/training_0_500', '/training_0_500', Record<never, never>, Record<never, never>>,
+    '/puzzle/[id]': RouteRecordInfo<'/puzzle/[id]', '/puzzle/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/puzzlesStockfish': RouteRecordInfo<'/puzzlesStockfish', '/puzzlesStockfish', Record<never, never>, Record<never, never>>,
+    '/setup': RouteRecordInfo<'/setup', '/setup', Record<never, never>, Record<never, never>>,
+    '/TrainingByRating': RouteRecordInfo<'/TrainingByRating', '/TrainingByRating', Record<never, never>, Record<never, never>>,
   }
 }
 

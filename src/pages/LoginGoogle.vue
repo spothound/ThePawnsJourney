@@ -7,7 +7,7 @@ onMounted(() => {
     .then((response) => {
       // This promise is resolved when user selects an account from the the One Tap prompt
       console.log('Handle the response', decodeCredential(response.credential))
-      const user = decodeCredential(response.credential)      
+      const user = decodeCredential(response.credential)
     })
     .catch((error) => {
       console.log('Handle the error', error)
