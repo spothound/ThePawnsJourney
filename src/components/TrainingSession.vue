@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ChessPuzzle from './ChessPuzzle.vue'
 import { ref, computed } from 'vue'
 import { shuffleArray } from '@/helper';
 import { type Puzzle } from '@/types'
