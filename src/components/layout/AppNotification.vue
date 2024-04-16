@@ -28,14 +28,16 @@ function toggleAll() {
 <template>
   <v-tooltip location="top">
     <template #activator="{ props }">
-      <v-btn :icon="notifications.length ? 'mdi-bell-badge-outline' : 'mdi-bell-outline'
+      <v-btn
+:icon="notifications.length ? 'mdi-bell-badge-outline' : 'mdi-bell-outline'
       " :rounded="0" v-bind="props" @click="toggleAll">
       </v-btn>
     </template>
     <span>通知</span>
   </v-tooltip>
   <teleport to="#app">
-    <v-card elevation="6" width="400" class="d-flex flex-column notification-card"
+    <v-card
+elevation="6" width="400" class="d-flex flex-column notification-card"
       :class="{ 'notification-card--open': showAll }">
       <v-toolbar flat density="compact">
         <v-toolbar-title class="font-weight-light text-body-1" :text="notifications.length ? '通知' : '没有新的通知'">
@@ -47,7 +49,8 @@ function toggleAll() {
       </v-toolbar>
       <v-slide-y-reverse-transition tag="div" class="d-flex flex-column notification-box" group hide-on-leave>
         <div v-for="notification in notificationsShown" :key="notification.id" class="notification-item-wrapper">
-          <AppNotificationItem v-model="notification.show" :variant="showAll" :notification="notification"
+          <AppNotificationItem
+v-model="notification.show" :variant="showAll" :notification="notification"
             :timeout="timeout" class="notification-item" @close="deleteNotification(notification.id)" />
         </div>
       </v-slide-y-reverse-transition>

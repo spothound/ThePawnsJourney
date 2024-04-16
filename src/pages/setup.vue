@@ -45,7 +45,7 @@ const selectRange = (range: number[]) => {
       <label class="form-label">ELO range:</label>
       <v-range-slider v-model="eloRange" min="0" max="3500" step="1" thumb-label="always" />
       <div class="predefined-ranges">
-        <v-btn class="range-button" v-for="(range, index) in predefinedRanges" :key="index" @click="selectRange(range)">
+        <v-btn v-for="(range, index) in predefinedRanges" :key="index" class="range-button" @click="selectRange(range)">
           {{ range[0] }} - {{ range[1] }}
         </v-btn>
       </div>

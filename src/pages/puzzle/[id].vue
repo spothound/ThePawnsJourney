@@ -16,7 +16,7 @@ const puzzleColection = [
   <div class="wrapper full-size">
     <Suspense>
     <template #default>
-      <LichessPuzzle :puzzleId="puzzleId" />
+      <LichessPuzzle :puzzle-id="puzzleId" />
     </template>
     <template #fallback>
       <div>Loading...</div>
