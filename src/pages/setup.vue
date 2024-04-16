@@ -38,7 +38,7 @@ const selectRange = (range: number[]) => {
 </script>
 
 <template>
-  <v-sheet width="600" class="mx-auto">
+  <v-sheet width="80%" class="mx-auto">
     <v-form ref="form">
       <label class="form-label">Number of puzzles:</label>
       <v-slider v-model="numberOfPuzzles" min="10" max="300" step="10" thumb-label="always"></v-slider>
