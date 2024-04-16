@@ -2,6 +2,7 @@
 import PuzzlesForStockfish from '@/components/PuzzlesForStockfish.vue';
 import data from '../puzzles/puzzles_200.json'
 import type { Puzzle } from '@/types';
+/*
 definePage({
   meta: {
     icon: 'mdi-fish',
@@ -9,6 +10,7 @@ definePage({
     drawerIndex: 0,
   },
 })
+*/
 </script>
 
 <template>
