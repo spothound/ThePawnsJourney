@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 import { shuffleArray } from '@/helper';
 import { type Puzzle } from '@/types'
+import { useRouter } from 'vue-router'
+const router = useRouter();
 
 const props = defineProps({
   puzzleColection: {
@@ -9,6 +11,10 @@ const props = defineProps({
     required: true,
   },
 })
+
+const goToPuzzle = (id: string) => {
+  router.push(`/puzzle/${id}`);
+}
 
 const auto = ref(false)
 const totalErrors = ref(0)
@@ -208,7 +214,7 @@ onBeforeMount(() => {
       closable
       class="max-w-screen-md mt-0 mb-6 p-3"
     >
-      You have completed all the puzzles in this collection!
+      You have completed all the puzzles in this session!
     </v-alert>
     <!-- puzzle timer -->
     <v-row class="grid">
@@ -234,6 +240,7 @@ onBeforeMount(() => {
         class="p-0 mb-3 xxxs:mb-2 md:w-full lg:landscape:max-w-[85vh] 2xl:landscape:max-w-[90vh]"
         order-md="0"
       >
+      <div class="text-grey clickable" @click="goToPuzzle(currentPuzzle.PuzzleId)">{{currentPuzzle.PuzzleId}}</div>
       <Suspense>
           <template #default>
         <LichessPuzzle
@@ -379,5 +386,12 @@ onBeforeMount(() => {
     grid-row: 5/6;
     grid-column: 5/8;
   }
+}
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  color: #555;
 }
 </style>
