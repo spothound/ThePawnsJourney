@@ -126,7 +126,7 @@ onBeforeMount(() => {
       closable
       class="max-w-screen-md mt-0 mb-6 p-3"
     >
-      You have completed all the puzzles in this collection!
+      You have completed all the puzzles in this session!
     </v-alert>
     <v-row class="grid">
       <!-- puzzle timer -->
