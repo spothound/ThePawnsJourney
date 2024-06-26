@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter();
 const apiUrl = import.meta.env.VUE_APP_API_URL || 'https://api.thepawnsjourney.live';
@@ -10,68 +10,76 @@ definePage({
     drawerIndex: 0,
   },
 })
-
-const numberOfPuzzles = ref(100);
+const isRangeInvalid = ref(false) // Add this line
+const numberOfPuzzles = ref(100)
 const eloRange = ref([0, 500]);
 const isLoading = ref(false);
 const errorMessage = ref('');
+const infoAlert = ref('');
+const patienceMessage = "This is a free service and the backend is down by default and takes a few seconds to start up when users start using it. You may experience a delay when starting a new session if you're the only person using the service at the moment."
 
-const fetchWithRetry = async (url: string, options: any = {}, retries: number = 5, delay: number = 5000) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fetch(url, options);
-      if (response.ok) {
-        return response.json();
-      } else {
-        console.log('Network response was not ok:', response);
-        throw new Error('Network response was not ok', );
-      }
-    } catch (error) {
-      if (i < retries - 1) {
-        await new Promise(res => setTimeout(res, delay));
-      } else {
-        throw error;
-      }
-    }
-  }
-};
+infoAlert.value = patienceMessage;
+
 
 const submitForm = async () => {
   isLoading.value = true;
   errorMessage.value = '';
+  isRangeInvalid.value = false;
+
+  const getPuzzles = async (eloMin: number, eloMax: number, numberOfPuzzles: number, retries: number = 10, delay: number = 5000) => {
+    for (let i = 0; i < retries; i++) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 1 minute timeout
+
+      try {
+        const response = await fetch(`${apiUrl}/puzzles/rating/${eloMin}/${eloMax}?limit=${numberOfPuzzles}`, { signal: controller.signal });
+        clearTimeout(timeoutId); // Clear the timeout if the request completes in time
+        const puzzleCollection = await response.json();
+        return puzzleCollection;
+      } catch (error) {
+        if (i < retries - 1) {
+          infoAlert.value = patienceMessage + ` Retrying... Attempt ${i + 1} of ${retries}`;
+          await new Promise(res => setTimeout(res, delay)); // Wait before retrying
+        } else {
+          if (error instanceof Error) {
+            errorMessage.value = error.message;
+          }
+          throw error; // Rethrow the error after exhausting retries
+        }
+      }
+    }
+  }
+
   try {
-    const getPuzzles = async (eloMin: number, eloMax: number, numberOfPuzzles: number) => {
-      const response = await fetchWithRetry(`${apiUrl}/puzzles/rating/${eloMin}/${eloMax}?limit=${numberOfPuzzles}`, {}, 5, 6000);
-      return response;
-    };
     const puzzleCollection = await getPuzzles(eloRange.value[0], eloRange.value[1], numberOfPuzzles.value);
-    console.log('Puzzle collection:', toRaw(puzzleCollection)); // Convert proxy to raw object
     if (puzzleCollection.length === 0) {
-      errorMessage.value = 'The current range is not valid.';
-      return;
+      isRangeInvalid.value = true;
     } else {
-      errorMessage.value = '';
-      localStorage.setItem('puzzleCollection', JSON.stringify(toRaw(puzzleCollection))); // Store raw object
+      localStorage.setItem('puzzleCollection', JSON.stringify(puzzleCollection));
       window.location.href = '/TrainingByRating';
     }
   } catch (error) {
-    console.error('Error fetching puzzles:', error);
-    errorMessage.value = 'An error occurred while fetching puzzles. Please try again.';
+    if (error instanceof Error) {
+      errorMessage.value = error.message;
+    }
   } finally {
-    isLoading.value = false;
+    isLoading.value = false; // Ensure loading state is reset
   }
 }
 
-const predefinedRangesElo = [[0, 500], [500, 1000], [1000, 1500], [1500, 2000], [2000, 2500], [2500, 3000], [3000, 3500]];
-const predefinedRangesN = [1, 10, 20, 50, 100, 200, 300];
+
+const predefinedRangesElo = [[0, 500], [500, 1000], [1000, 1500], [1500, 2000], [2000, 2500], [2500, 3000], [3000, 3500]]
+const predefinedRangesN = [1, 10, 20, 50, 100, 200, 300]
+
 
 const selectELORange = (range: number[]) => {
-  eloRange.value = range;
+  eloRange.value = range
 }
 
 const selectNRange = (npuzzles: number) => {
-  numberOfPuzzles.value = npuzzles;
+  numberOfPuzzles.value = npuzzles
 }
+
 </script>
 
 <template>
@@ -81,7 +89,7 @@ const selectNRange = (npuzzles: number) => {
       <v-slider v-model="numberOfPuzzles" min="1" max="300" step="1" thumb-label="always"></v-slider>
       <v-btn v-for="(npuzzles, index) in predefinedRangesN" :key="index" class="range-button" @click="selectNRange(npuzzles)">
           {{ npuzzles }}
-      </v-btn>
+        </v-btn>
       <label class="form-label">ELO range:</label>
       <v-range-slider v-model="eloRange" min="0" max="3500" step="1" thumb-label="always" />
       <div class="predefined-ranges">
@@ -92,7 +100,7 @@ const selectNRange = (npuzzles: number) => {
       <div style="display: flex; justify-content: center;">
         <v-btn :loading="isLoading" @click="submitForm">Start Session</v-btn>
       </div>
-        <br>
+      <br>
         <v-alert
           v-if="errorMessage"
           density="compact"
@@ -106,7 +114,7 @@ const selectNRange = (npuzzles: number) => {
           title="Patience"
           type="info"
           variant="tonal"
-        >This is a free service and the backend is down by default and takes a few seconds to start up when users start using it. You may experience a delay when starting a new session if you're the only person using the service at the moment.
+        >{{ infoAlert }}
       </v-alert>
     </v-form>
   </v-sheet>
@@ -135,11 +143,5 @@ const selectNRange = (npuzzles: number) => {
   align-items: center;
   justify-content: center;
   margin-bottom: 30px;
-}
-.error-message {
-  color: red;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 20px;
 }
 </style>
