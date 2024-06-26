@@ -29,7 +29,7 @@ const submitForm = async () => {
   const getPuzzles = async (eloMin: number, eloMax: number, numberOfPuzzles: number, retries: number = 10, delay: number = 5000) => {
     for (let i = 0; i < retries; i++) {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000); // 1 minute timeout
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 1 minute timeout
 
       try {
         const response = await fetch(`${apiUrl}/puzzles/rating/${eloMin}/${eloMax}?limit=${numberOfPuzzles}`, { signal: controller.signal });
