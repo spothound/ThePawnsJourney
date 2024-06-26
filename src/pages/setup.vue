@@ -10,52 +10,37 @@ definePage({
     drawerIndex: 0,
   },
 })
-
-const isRangeInvalid = ref(false);
-const numberOfPuzzles = ref(100);
-const eloRange = ref([0, 400]);
-const isLoading = ref(false);
-const errorMessage = ref('');
-
+const isRangeInvalid = ref(false) // Add this line
+const numberOfPuzzles = ref(100)
+const eloRange = ref([0, 400])
 const submitForm = async () => {
-  isLoading.value = true;
-  errorMessage.value = '';
-  try {
-    const getPuzzles = async (eloMin: number, eloMax: number, numberOfPuzzles: number) => {
-      const response = await fetch(`${apiUrl}/puzzles/rating/${eloMin}/${eloMax}?limit=${numberOfPuzzles}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const puzzleCollection = await response.json();
-      return puzzleCollection;
-    }
-    const puzzleCollection = await getPuzzles(eloRange.value[0], eloRange.value[1], numberOfPuzzles.value);
-    if (puzzleCollection.length === 0) {
-      isRangeInvalid.value = true;
-      return;
-    } else {
-      isRangeInvalid.value = false;
-      localStorage.setItem('puzzleCollection', JSON.stringify(puzzleCollection));
-      window.location.href = '/TrainingByRating';
-    }
-  } catch (error) {
-    console.error('Error fetching puzzles:', error);
-    errorMessage.value = 'An error occurred while fetching puzzles. Please try again.';
-  } finally {
-    isLoading.value = false;
+  const getPuzzles = async (eloMin: number, eloMax: number, numberOfPuzzles: number) => {
+    const response = await fetch(`${apiUrl}/puzzles/rating/${eloMin}/${eloMax}?limit=${numberOfPuzzles}`);    const puzzleColection = await response.json();
+    return puzzleColection;
+  }
+  const puzzleColection = await getPuzzles(eloRange.value[0], eloRange.value[1], numberOfPuzzles.value);
+  if (puzzleColection.length === 0) {
+    isRangeInvalid.value = true;
+    return;
+  }else{
+    isRangeInvalid.value = false;
+    localStorage.setItem('puzzleColection', JSON.stringify(puzzleColection));
+    window.location.href = '/TrainingByRating';
   }
 }
 
-const predefinedRangesElo = [[0, 500], [500, 1000], [1000, 1500], [1500, 2000], [2000, 2500], [2500, 3000], [3000, 3500]];
-const predefinedRangesN = [1, 10, 20, 50, 100, 200, 300];
+const predefinedRangesElo = [[0, 500], [500, 1000], [1000, 1500], [1500, 2000], [2000, 2500], [2500, 3000], [3000, 3500]]
+const predefinedRangesN = [1, 10, 20, 50, 100, 200, 300]
+
 
 const selectELORange = (range: number[]) => {
-  eloRange.value = range;
+  eloRange.value = range
 }
 
 const selectNRange = (npuzzles: number) => {
-  numberOfPuzzles.value = npuzzles;
+  numberOfPuzzles.value = npuzzles
 }
+
 </script>
 
 <template>
@@ -65,7 +50,7 @@ const selectNRange = (npuzzles: number) => {
       <v-slider v-model="numberOfPuzzles" min="1" max="300" step="1" thumb-label="always"></v-slider>
       <v-btn v-for="(npuzzles, index) in predefinedRangesN" :key="index" class="range-button" @click="selectNRange(npuzzles)">
           {{ npuzzles }}
-      </v-btn>
+        </v-btn>
       <label class="form-label">ELO range:</label>
       <v-range-slider v-model="eloRange" min="0" max="3500" step="1" thumb-label="always" />
       <div class="predefined-ranges">
@@ -74,10 +59,9 @@ const selectNRange = (npuzzles: number) => {
         </v-btn>
       </div>
       <div style="display: flex; justify-content: center;">
-        <v-btn :loading="isLoading" @click="submitForm">Start Session</v-btn>
+        <v-btn @click="submitForm">Start Session</v-btn>
       </div>
       <p v-if="isRangeInvalid">The current range is not valid.</p>
-      <p v-if="errorMessage">{{ errorMessage }}</p> <!-- Add this line -->
     </v-form>
   </v-sheet>
 </template>
