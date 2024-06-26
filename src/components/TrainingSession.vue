@@ -16,7 +16,7 @@ const goToPuzzle = (id: string) => {
   router.push(`/puzzle/${id}`);
 }
 
-const auto = ref(false)
+const auto = ref(true)
 const totalErrors = ref(0)
 const currentErrors = ref(0)
 const allowClue = ref(false)

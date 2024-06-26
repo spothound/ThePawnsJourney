@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Puzzle } from '@/types'
 
-const puzzleColection = JSON.parse(localStorage.getItem('puzzleColection') as string);
+const puzzleColection = JSON.parse(localStorage.getItem('puzzleCollection') as string);
 
 if (!puzzleColection) {
   window.location.href = '/Setup';
