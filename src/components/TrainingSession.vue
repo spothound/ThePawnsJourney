@@ -290,7 +290,6 @@ onBeforeMount(() => {
               inset
               label="Auto"
               color="indigo"
-              value="Auto"
               hide-details
               class="switch flex justify-center auto-label"
             ></v-switch>
