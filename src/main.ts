@@ -2,8 +2,8 @@ import { createApp, type Plugin } from 'vue';
 import App from './App.vue';
 import '@/assets/styles/index.css';
 import vue3GoogleLogin from 'vue3-google-login';
-import { createGtm } from '@gtm-support/vue-gtm';
-import router from './router';  // Import your router here
+import VueGtag from 'vue-gtag-next';
+import router from './plugins/router';  // Import your router here
 
 const apiUrl = import.meta.env.VUE_APP_API_URL || 'https://api.thepawnsjourney.live';
 
@@ -20,10 +20,11 @@ app.use(vue3GoogleLogin, {
   clientId: '368514305696-6nuvllac0utemf8ad4ch38j6h002ih3g.apps.googleusercontent.com',
 });
 
-app.use(createGtm({
-  id: 'G-G-SE7XN0JDRV',
-  vueRouter: router
-}));
+app.use(VueGtag, {
+  property: {
+    id: 'G-SE7XN0JDRV',
+  },
+});
 
 app.use(router);
 
