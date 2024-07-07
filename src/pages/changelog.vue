@@ -15,7 +15,13 @@ const changelog = [
     icon: 'mdi-home-floor-1',
     size: 'large'
   },
-  // Add more entries here...
+  {
+    title: 'v1.0.1',
+    text: 'Google Analytics added to track user interactions and improve the website.',
+    color: 'bg-purple-lighten-2',
+    icon: 'mdi-home-floor-1',
+    size: 'medium'
+  },
 ];
 
 </script>
