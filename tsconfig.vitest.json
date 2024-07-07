@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": ["./src/**/*", "./test/*"],
+  "include": ["./src/**/*", "./test/*", "./plugins/static_import/*", "./cookieConsentConfig.js", "./plugins/static_import/CookieConsentVue.ts"],
   "exclude": [],
   "compilerOptions": {
     "composite": true,
