@@ -8,7 +8,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // console.log('to', to, 'from', from)
   const authStore = useAuthStore()
 
   // Check if the route requires the user to be logged in

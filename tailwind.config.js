@@ -4,7 +4,7 @@ import autoprefixer from 'autoprefixer'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
 export default {
-  content: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
+  content: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx,vue}', './node_modules/@ipaat/vue3-tailwind3-cookie-comply/dist/vue3-tailwind3-cookie-comply.umd.js'],
   theme: {
     screens: {
       xxxs: { max: '280px' },
