@@ -61,11 +61,8 @@ const cookieConsentConfig = {
       },
       onConsent: function(){
         if(acceptedCategory('analytics')){
-            // Analytics category enabled
-        }
-
-        if(acceptedService('Google Analytics', 'analytics')){
           bootstrap().then((gtag) => {
+            console.log('Google Analytics is ready to use')
           })
         }
     }
