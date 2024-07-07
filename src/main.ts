@@ -25,7 +25,6 @@ app.use(vue3GoogleLogin, {
 app.use(router).use(CookieConsentVue, cookieConsentConfig);
 
 app.use(VueGtag, {
-  bootstrap: false,
   config: {
     id: 'G-SE7XN0JDRV',
   },

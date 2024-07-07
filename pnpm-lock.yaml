@@ -3833,6 +3833,10 @@ packages:
     resolution: {integrity: sha512-0vOfAtI67UjeO1G6UiX5Kd76CqaQ67wrRZiOe7UAb9Jm6GzlUr/fC7CV90XfwapJRjpCMaZFhv1V0ajWRmE9Dg==}
     dev: true
 
+  /vue-cookies@1.8.4:
+    resolution: {integrity: sha512-9zjvACKE4W0kEb8OQtXzpizKhf6zfFOG/Z1TEUjSJn4Z4rintuAHo8y/FpCUhTWHMmPe8E+Fko+/tiXVM+5jOw==}
+    dev: false
+
   /vue-demi@0.13.11(vue@3.4.3):
     resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
     engines: {node: '>=12'}
