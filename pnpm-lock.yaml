@@ -23,12 +23,18 @@ dependencies:
   uuid:
     specifier: ^9.0.1
     version: 9.0.1
+  vanilla-cookieconsent:
+    specifier: ^3.0.1
+    version: 3.0.1
   vue:
     specifier: ^3.4.3
     version: 3.4.3(typescript@5.3.3)
   vue-echarts:
     specifier: ^6.6.8
     version: 6.6.8(echarts@5.4.3)(vue@3.4.3)
+  vue-gtag:
+    specifier: ^2.0.1
+    version: 2.0.1(vue@3.4.3)
   vue-gtag-next:
     specifier: ^1.14.0
     version: 1.14.0(vue@3.4.3)
@@ -3677,6 +3683,10 @@ packages:
     hasBin: true
     dev: false
 
+  /vanilla-cookieconsent@3.0.1:
+    resolution: {integrity: sha512-gqc4x7O9t1I4xWr7x6/jtQWPr4PZK26SmeA0iyTv1WyoECfAGnu5JEOExmMEP+5Fz66AT9OiCBO3GII4wDQHLw==}
+    dev: false
+
   /vite-node@1.1.1(@types/node@20.10.6):
     resolution: {integrity: sha512-2bGE5w4jvym5v8llF6Gu1oBrmImoNSs4WmRVcavnG2me6+8UQntTqLiAMFyiAobp+ZXhj5ZFhI7SmLiFr/jrow==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -3894,6 +3904,14 @@ packages:
     resolution: {integrity: sha512-iJl+cOG2GU5NuxqzSSIpt03WVOvZqyKB9TOy7d55KiuvRklcnb2nlqxW5B/a3/sbIt7fla+XEkRyMCcoz0zAHw==}
     peerDependencies:
       vue: ^3.0.0-rc.11
+    dependencies:
+      vue: 3.4.3(typescript@5.3.3)
+    dev: false
+
+  /vue-gtag@2.0.1(vue@3.4.3):
+    resolution: {integrity: sha512-aM4A58FVL0wV2ptYi+xzAjeg+pQVRyUcfBc5UkXAwQrR4t3WBhor50Izp2I+3Oo7+l+vWJ7u78DGcNzReb8S/A==}
+    peerDependencies:
+      vue: ^3.0.0
     dependencies:
       vue: 3.4.3(typescript@5.3.3)
     dev: false
